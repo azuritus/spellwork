@@ -42,8 +42,11 @@ namespace SpellWork
 
             _status.Text = String.Format("DBC Locale: {0}", DBC.Locale);
 
-            _cbAdvansedFilter1.SetStructFields<SpellEntry>();
-            _cbAdvansedFilter2.SetStructFields<SpellEntry>();
+            _cbAdvancedFilter1.SetStructFields<SpellEntry>();
+            _cbAdvancedFilter2.SetStructFields<SpellEntry>();
+
+            _cbAdvancedFilter1CompareType.SetEnumValuesDirect<CompareType>(true);
+            _cbAdvancedFilter2CompareType.SetEnumValuesDirect<CompareType>(true);
 
             ConnStatus();
         }
@@ -203,14 +206,17 @@ namespace SpellWork
             var fTarget2 = _cbTarget2.SelectedValue.ToInt32();
 
             // additional filtert
-            var advVal1 = _tbAdvansedFilter1Val.Text;
-            var advVal2 = _tbAdvansedFilter2Val.Text;
+            var advVal1 = _tbAdvancedFilter1Val.Text;
+            var advVal2 = _tbAdvancedFilter2Val.Text;
 
-            var field1 = (MemberInfo)_cbAdvansedFilter1.SelectedValue;
-            var field2 = (MemberInfo)_cbAdvansedFilter2.SelectedValue;
+            var field1 = (MemberInfo)_cbAdvancedFilter1.SelectedValue;
+            var field2 = (MemberInfo)_cbAdvancedFilter2.SelectedValue;
 
             bool use1val = advVal1 != string.Empty;
             bool use2val = advVal2 != string.Empty;
+
+            CompareType field1ct = (CompareType)_cbAdvancedFilter1CompareType.SelectedIndex;
+            CompareType field2ct = (CompareType)_cbAdvancedFilter2CompareType.SelectedIndex;
 
             _spellList = (from spell in DBC.Spell.Values
                            
@@ -219,8 +225,8 @@ namespace SpellWork
                               && (!bSpellAura   || spell.EffectApplyAuraName.ContainsElement((uint)fSpellAura))
                               && (!bTarget1     || spell.EffectImplicitTargetA.ContainsElement((uint)fTarget1))
                               && (!bTarget2     || spell.EffectImplicitTargetB.ContainsElement((uint)fTarget2))
-                              && (!use1val      || spell.CreateFilter(field1, advVal1))
-                              && (!use2val      || spell.CreateFilter(field2, advVal2))
+                              && (!use1val      || spell.CreateFilter(field1, advVal1, field1ct))
+                              && (!use2val      || spell.CreateFilter(field2, advVal2, field2ct))
                            
                           select spell).ToList();
 
@@ -564,13 +570,14 @@ namespace SpellWork
             // drop query
             var drop = String.Format("DELETE FROM `spell_proc_event` WHERE `entry` IN ({0});", ProcInfo.SpellProc.ID);
             // insert query
-            var insert = String.Format("INSERT INTO `spell_proc_event` VALUES ({0}, 0x{1:X2}, 0x{2:X2}, 0x{3:X8}, 0x{4:X8}, 0x{5:X8}, 0x{6:X8}, 0x{7:X8}, {8}, {9}, {10});",
+            var insert = String.Format("INSERT INTO `spell_proc_event` VALUES ({0}, 0x{1:X2}, 0x{2:X2}, 0x{3:X8}, 0x{4:X8}, 0x{5:X8}, 0x{6:X8}, 0x{7:X8}, 0x{8:X8}, 0x{9:X8}, 0x{10:X8}, 0x{11:X8}, 0x{12:X8}, 0x{13:X8}, {14}, {15}, {16});",
                 ProcInfo.SpellProc.ID,
                 _clbSchools.GetFlagsValue(),
                 _cbProcFitstSpellFamily.SelectedValue.ToUInt32(),
                 SpellFamilyFlags[0],
                 SpellFamilyFlags[1],
                 SpellFamilyFlags[2],
+                0,0,0,0,0,0,// пока что так, пока не пойму как...
                 _clbProcFlags.GetFlagsValue(),
                 _clbProcFlagEx.GetFlagsValue(),
                 _tbPPM.Text.Replace(',', '.'),
