@@ -9,32 +9,32 @@ namespace SpellWork
         public const String DEFAULT_FAMILY = "Arial Unicode MS";
         public const float  DEFAULT_SIZE   = 9f;
 
-        public static void AppendFormatLine(this RichTextBox textbox, string format, params object[] arg0)
+        public static void AppendFormatLine(this TextBoxBase textbox, string format, params object[] arg0)
         {
             textbox.AppendText(String.Format(format, arg0) + Environment.NewLine);
         }
 
-        public static void AppendFormat(this RichTextBox textbox, string format, params object[] arg0)
+        public static void AppendFormat(this TextBoxBase textbox, string format, params object[] arg0)
         {
             textbox.AppendText(String.Format(format, arg0));
         }
 
-        public static void AppendLine(this RichTextBox textbox)
+        public static void AppendLine(this TextBoxBase textbox)
         {
             textbox.AppendText(Environment.NewLine);
         }
 
-        public static void AppendLine(this RichTextBox textbox, string text)
+        public static void AppendLine(this TextBoxBase textbox, string text)
         {
             textbox.AppendText(text + Environment.NewLine);
         }
 
-        public static void Append(this RichTextBox textbox, object text)
+        public static void Append(this TextBoxBase textbox, object text)
         {
             textbox.AppendText(text.ToString());
         }
 
-        public static void AppendFormatLineIfNotNull(this RichTextBox builder, string format, uint arg)
+        public static void AppendFormatLineIfNotNull(this TextBoxBase builder, string format, uint arg)
         {
             if (arg != 0)
             {
@@ -42,7 +42,7 @@ namespace SpellWork
             }
         }
 
-        public static void AppendFormatLineIfNotNull(this RichTextBox builder, string format, float arg)
+        public static void AppendFormatLineIfNotNull(this TextBoxBase builder, string format, float arg)
         {
             if (arg != 0.0f)
             {
@@ -50,7 +50,7 @@ namespace SpellWork
             }
         }
 
-        public static void AppendFormatLineIfNotNull(this RichTextBox builder, string format, string arg)
+        public static void AppendFormatLineIfNotNull(this TextBoxBase builder, string format, string arg)
         {
             if (arg != String.Empty)
             {
@@ -58,7 +58,7 @@ namespace SpellWork
             }
         }
 
-        public static void AppendFormatIfNotNull(this RichTextBox builder, string format, uint arg)
+        public static void AppendFormatIfNotNull(this TextBoxBase builder, string format, uint arg)
         {
             if (arg != 0)
             {
@@ -66,7 +66,7 @@ namespace SpellWork
             }
         }
 
-        public static void AppendFormatIfNotNull(this RichTextBox builder, string format, float arg)
+        public static void AppendFormatIfNotNull(this TextBoxBase builder, string format, float arg)
         {
             if (arg != 0.0f)
             {

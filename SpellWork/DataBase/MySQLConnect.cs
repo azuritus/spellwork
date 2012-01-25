@@ -98,11 +98,11 @@ namespace SpellWork
             _command.Connection.Close();
         }
 
-        public static List<Item> SelectItems()
+        public static ICollection<Item> SelectItems()
         {
-            List<Item> items = DBC.ItemTemplate;
+            var items = DBC.ItemTemplate;
             // In order to reduce the search time, we make the first selection of all items that have spellid
-            string query = String.Format(
+            var query = String.Format(
                 @"SELECT    t.entry, 
                             t.name, 
                             t.description, 
@@ -132,7 +132,7 @@ namespace SpellWork
                 _command = new MySqlCommand(query, _conn);
                 _conn.Open();
 
-                using (MySqlDataReader reader = _command.ExecuteReader())
+                using (var reader = _command.ExecuteReader())
                 {
                     while (reader.Read())
                     {

@@ -196,7 +196,7 @@ namespace SpellWork
 
         public static void SetEnumValues<T>(this ComboBox cb, string NoValue)
         {
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             dt.Columns.Add("ID");
             dt.Columns.Add("NAME");
 
