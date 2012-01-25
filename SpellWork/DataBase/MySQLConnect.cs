@@ -98,7 +98,7 @@ namespace SpellWork
             _command.Connection.Close();
         }
 
-        public static ICollection<Item> SelectItems()
+        public static List<Item> SelectItems()
         {
             var items = DBC.ItemTemplate;
             // In order to reduce the search time, we make the first selection of all items that have spellid
