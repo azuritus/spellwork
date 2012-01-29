@@ -6,17 +6,17 @@ namespace SpellWork
 {
     public static class RichTextBoxExtensions
     {
-        public const String DEFAULT_FAMILY = "Arial Unicode MS";
-        public const float  DEFAULT_SIZE   = 9f;
+        private const string DEFAULT_FAMILY = "Arial Unicode MS";
+        private const float DEFAULT_SIZE = 9f;
 
-        public static void AppendFormatLine(this TextBoxBase textbox, string format, params object[] arg0)
+        public static void AppendFormatLine(this TextBoxBase textbox, string format, params object[] args)
         {
-            textbox.AppendText(String.Format(format, arg0) + Environment.NewLine);
+            textbox.AppendText(String.Format(format, args) + Environment.NewLine);
         }
 
-        public static void AppendFormat(this TextBoxBase textbox, string format, params object[] arg0)
+        public static void AppendFormat(this TextBoxBase textbox, string format, params object[] args)
         {
-            textbox.AppendText(String.Format(format, arg0));
+            textbox.AppendText(String.Format(format, args));
         }
 
         public static void AppendLine(this TextBoxBase textbox)
@@ -34,44 +34,34 @@ namespace SpellWork
             textbox.AppendText(text.ToString());
         }
 
-        public static void AppendFormatLineIfNotNull(this TextBoxBase builder, string format, uint arg)
+        public static void AppendFormatLineIfNotZero(this TextBoxBase builder, string format, uint arg)
         {
             if (arg != 0)
-            {
                 builder.AppendFormatLine(format, arg);
-            }
         }
 
-        public static void AppendFormatLineIfNotNull(this TextBoxBase builder, string format, float arg)
+        public static void AppendFormatLineIfNotZero(this TextBoxBase builder, string format, float arg)
         {
             if (arg != 0.0f)
-            {
                 builder.AppendFormatLine(format, arg);
-            }
         }
 
-        public static void AppendFormatLineIfNotNull(this TextBoxBase builder, string format, string arg)
+        public static void AppendFormatLineIfNotNullOrEmpty(this TextBoxBase builder, string format, string arg)
         {
-            if (arg != String.Empty)
-            {
+            if (!string.IsNullOrEmpty(arg))
                 builder.AppendFormatLine(format, arg);
-            }
         }
 
-        public static void AppendFormatIfNotNull(this TextBoxBase builder, string format, uint arg)
+        public static void AppendFormatIfNotZero(this TextBoxBase builder, string format, uint arg)
         {
             if (arg != 0)
-            {
                 builder.AppendFormat(format, arg);
-            }
         }
 
-        public static void AppendFormatIfNotNull(this TextBoxBase builder, string format, float arg)
+        public static void AppendFormatIfNotZero(this TextBoxBase builder, string format, float arg)
         {
             if (arg != 0.0f)
-            {
                 builder.AppendFormat(format, arg);
-            }
         }
 
         public static void SetStyle(this RichTextBox textbox, Color color, FontStyle style)
@@ -79,7 +69,7 @@ namespace SpellWork
             textbox.SelectionColor = color;
             textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, style);
         }
-        
+
         public static void SetBold(this RichTextBox textbox)
         {
             textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, FontStyle.Bold);
@@ -93,28 +83,26 @@ namespace SpellWork
 
         public static void ColorizeCode(this RichTextBox rtb)
         {
-            string[] keywords = { "INSERT", "INTO", "DELETE", "FROM", "IN", "VALUES", "WHERE" };
-            string text = rtb.Text;
+            var keywords = new[] { "INSERT", "INTO", "DELETE", "FROM", "IN", "VALUES", "WHERE" };
+            var text = rtb.Text;
 
             rtb.SelectAll();
             rtb.SelectionColor = rtb.ForeColor;
 
-            foreach (String keyword in keywords)
+            foreach (var keyword in keywords)
             {
-                int keywordPos = rtb.Find(keyword, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-                
+                var keywordPos = rtb.Find(keyword, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+
                 while (keywordPos != -1)
                 {
-                    int commentPos = text.LastIndexOf("-- ", keywordPos, StringComparison.OrdinalIgnoreCase);
-                    int newLinePos = text.LastIndexOf("\n", keywordPos, StringComparison.OrdinalIgnoreCase);
+                    var commentPos = text.LastIndexOf("-- ", keywordPos, StringComparison.OrdinalIgnoreCase);
+                    var newLinePos = text.LastIndexOf("\n", keywordPos, StringComparison.OrdinalIgnoreCase);
 
-                    int quoteCount = 0;
-                    int quotePos = text.IndexOf("\"", newLinePos + 1, keywordPos - newLinePos, StringComparison.OrdinalIgnoreCase);
+                    var quoteCount = 0;
+                    var quotePos = text.IndexOf("\"", newLinePos + 1, keywordPos - newLinePos, StringComparison.OrdinalIgnoreCase);
 
                     for (; quotePos != -1; quoteCount++)
-                    {
                         quotePos = text.IndexOf("\"", quotePos + 1, keywordPos - (quotePos + 1), StringComparison.OrdinalIgnoreCase);
-                    }
 
                     if (newLinePos >= commentPos && quoteCount % 2 == 0)
                         rtb.SelectionColor = Color.Blue;

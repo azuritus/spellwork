@@ -1,55 +1,66 @@
 ﻿using System;
-using System.Text;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SpellWork
 {
     static class DBCReader
     {
-        public static unsafe Dictionary<uint, T> ReadDBC<T>(Dictionary<uint, string> strDict) where T : struct
+        public static IDictionary<uint, T> ReadDBC<T>(IDictionary<uint, string> strDict) where T : struct
         {
             var dict = new Dictionary<uint, T>();
-            string fileName = Path.Combine(DBC.DBC_PATH, typeof(T).Name + ".dbc").Replace("Entry", String.Empty);
+            var fileName = Path.Combine(DBC.DBC_PATH, typeof(T).Name + ".dbc").Replace("Entry", String.Empty);
 
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            using (var reader = new BinaryReader(fs, Encoding.UTF8))
+            Stream fileStream = null;
+            try
             {
-                if (!File.Exists(fileName))
-                    throw new FileNotFoundException("One of DBC files not found.", fileName);
-
-                // read dbc header
-                var header = reader.ReadStruct<DbcHeader>();
-                int size = Marshal.SizeOf(typeof(T));
-
-                if (!header.IsDBC)
-                    throw new Exception(fileName + " is not DBC file!");
-                
-                if (header.RecordSize != size)
-                    throw new Exception(string.Format("Size of row in DBC file ({0}) != size of DBC struct ({1}) in DBC: {2}", header.RecordSize, size, fileName));
-
-                // read dbc data
-                for (int r = 0; r < header.RecordsCount; ++r)
+                fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                using (var reader = new BinaryReader(fileStream, Encoding.UTF8))
                 {
-                    uint key = reader.ReadUInt32();
-                    reader.BaseStream.Position -= 4;
+                    fileStream = null;
 
-                    T T_entry = reader.ReadStruct<T>();
+                    if (!File.Exists(fileName))
+                        throw new FileNotFoundException("One of DBC files not found.", fileName);
 
-                    dict.Add(key, T_entry);
-                }
+                    // read dbc header
+                    var header = reader.ReadStruct<DbcHeader>();
+                    var size = Marshal.SizeOf(typeof(T));
 
-                // read dbc strings
-                if (strDict != null)
-                {
-                    while (reader.BaseStream.Position != reader.BaseStream.Length)
+                    if (!header.IsDBC)
+                        throw new IOException(fileName + " is not DBC file!");
+
+                    if (header.RecordSize != size)
+                        throw new IOException(string.Format("Size of row in DBC file ({0}) != size of DBC struct ({1}) in DBC: {2}", header.RecordSize, size, fileName));
+
+                    // read dbc data
+                    for (var record = 0; record < header.RecordsCount; ++record)
                     {
-                        var offset = (uint)(reader.BaseStream.Position - header.StartStringPosition);
-                        var str    = reader.ReadCString();
-                        strDict.Add(offset, str);
+                        var key = reader.ReadUInt32();
+                        reader.BaseStream.Position -= 4;
+
+                        var T_entry = reader.ReadStruct<T>();
+
+                        dict.Add(key, T_entry);
+                    }
+
+                    // read dbc strings
+                    if (strDict != null)
+                    {
+                        while (reader.BaseStream.Position != reader.BaseStream.Length)
+                        {
+                            var offset = (uint)(reader.BaseStream.Position - header.StartStringPosition);
+                            var str = reader.ReadCString();
+                            strDict.Add(offset, str);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                if (fileStream != null)
+                    fileStream.Dispose();
             }
             return dict;
         }

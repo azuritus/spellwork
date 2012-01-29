@@ -1,8 +1,7 @@
 ﻿using System;
-using SpellWork.Properties;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using System.Windows.Forms;
+using SpellWork.Properties;
 
 namespace SpellWork
 {
@@ -15,15 +14,15 @@ namespace SpellWork
         public static List<string> Dropped = new List<string>();
         public static List<SpellProcEventEntry> SpellProcEvent = new List<SpellProcEventEntry>();
 
-        private static String ConnectionString
+        private static string ConnectionString
         {
-            get 
+            get
             {
-                return String.Format("Server={0};Port={1};Uid={2};Pwd={3};Database={4};character set=utf8;Connection Timeout=10", 
-                    Settings.Default.Host, 
-                    Settings.Default.Port, 
-                    Settings.Default.User, 
-                    Settings.Default.Pass, 
+                return String.Format("Server={0};Port={1};Uid={2};Pwd={3};Database={4};character set=utf8;Connection Timeout=10",
+                    Settings.Default.Host,
+                    Settings.Default.Port,
+                    Settings.Default.User,
+                    Settings.Default.Pass,
                     Settings.Default.Db_mangos);
             }
         }
@@ -36,8 +35,8 @@ namespace SpellWork
             }
             else
             {
-                Dropped.Add(String.Format("DELETE FROM `spell_proc_event` WHERE `entry` IN ({0});\r\n", id.ToUInt32()));
-                return String.Empty;
+                Dropped.Add(string.Format("DELETE FROM `spell_proc_event` WHERE `entry` IN ({0});\r\n", id));
+                return string.Empty;
             }
         }
 
@@ -55,11 +54,11 @@ namespace SpellWork
                     {
                         SpellProcEventEntry str;
 
-                        str.ID                  = reader[0].ToUInt32();
-                        str.SpellName           = GetSpellName(str.ID);
-                        str.SchoolMask          = reader[1].ToUInt32();
-                        str.SpellFamilyName     = reader[2].ToUInt32();
-                        str.SpellFamilyMask     = new[,] 
+                        str.ID = reader[0].ToUInt32();
+                        str.SpellName = GetSpellName(str.ID);
+                        str.SchoolMask = reader[1].ToUInt32();
+                        str.SpellFamilyName = reader[2].ToUInt32();
+                        str.SpellFamilyMask = new[,] 
                         { 
                             {
                                 (uint)reader[3 ], 
@@ -77,12 +76,12 @@ namespace SpellWork
                                 (uint)reader[11],
                             }
                         };
-                        str.ProcFlags           = reader[12].ToUInt32();
-                        str.ProcEx              = reader[13].ToUInt32();
-                        str.PpmRate             = reader[14].ToUInt32();
-                        str.CustomChance        = reader[15].ToUInt32();
-                        str.Cooldown            = reader[16].ToUInt32();
-                        
+                        str.ProcFlags = reader[12].ToUInt32();
+                        str.ProcEx = reader[13].ToUInt32();
+                        str.PpmRate = reader[14].ToUInt32();
+                        str.CustomChance = reader[15].ToUInt32();
+                        str.Cooldown = reader[16].ToUInt32();
+
                         SpellProcEvent.Add(str);
                     }
                 }
@@ -91,14 +90,14 @@ namespace SpellWork
 
         public static void Insert(string query)
         {
-            _conn    = new MySqlConnection(ConnectionString);
+            _conn = new MySqlConnection(ConnectionString);
             _command = new MySqlCommand(query, _conn);
             _conn.Open();
             _command.ExecuteNonQuery();
             _command.Connection.Close();
         }
 
-        public static List<Item> SelectItems()
+        public static IList<Item> SelectItems()
         {
             var items = DBC.ItemTemplate;
             // In order to reduce the search time, we make the first selection of all items that have spellid
@@ -125,7 +124,7 @@ namespace SpellWork
                     t.spellid_3 <> 0 || 
                     t.spellid_4 <> 0 || 
                     t.spellid_5 <> 0;",
-                (int)DBC.Locale == 0 ? 1 : (int)DBC.Locale /* it's huck TODO: replase code*/);
+                (int)DBC.Locale == 0 ? 1 : (int)DBC.Locale /* it's hack TODO: replace code*/);
 
             using (_conn = new MySqlConnection(ConnectionString))
             {
@@ -138,23 +137,23 @@ namespace SpellWork
                     {
                         items.Add(new Item
                         {
-                            Entry               = reader[0].ToUInt32(),
-                            Name                = reader[1].ToString(),
-                            Description         = reader[2].ToString(),
-                            LocalesName         = reader[3].ToString(),
-                            LocalesDescription  = reader[4].ToString(),
-                            SpellID             = new uint[] 
+                            Entry = reader[0].ToUInt32(),
+                            Name = reader[1].ToString(),
+                            Description = reader[2].ToString(),
+                            LocalesName = reader[3].ToString(),
+                            LocalesDescription = reader[4].ToString(),
+                            SpellID = new uint[] 
                             { 
-                                (uint)reader[5], 
-                                (uint)reader[6], 
-                                (uint)reader[7], 
-                                (uint)reader[8], 
-                                (uint)reader[9] 
+                                reader[5].ToUInt32(), 
+                                reader[6].ToUInt32(), 
+                                reader[7].ToUInt32(), 
+                                reader[8].ToUInt32(), 
+                                reader[9].ToUInt32() 
                             }
                         });
                     }
                 }
-             }
+            }
             return items;
         }
 

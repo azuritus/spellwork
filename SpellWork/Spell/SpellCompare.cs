@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace SpellWork
 {
@@ -11,7 +11,7 @@ namespace SpellWork
         /// <summary>
         /// Search terms
         /// </summary>
-        string[] words = new[] { "=====" };// todo: more wodrs
+        string[] words = new[] { "=====" };// TODO: more words
 
         /// <summary>
         /// Compares two spells
@@ -25,11 +25,11 @@ namespace SpellWork
             new SpellInfo(rtb1, spell1);
             new SpellInfo(rtb2, spell2);
 
-            string[] strsl = rtb1.Text.Split('\n');
-            string[] strsr = rtb2.Text.Split('\n');
-            
-            int pos = 0;
-            foreach (string str in strsl)
+            var strsl = rtb1.Text.Split('\n');
+            var strsr = rtb2.Text.Split('\n');
+
+            var pos = 0;
+            foreach (var str in strsl)
             {
                 pos += str.Length + 1;
                 rtb1.Select(pos - str.Length - 1, pos - 1);
@@ -52,7 +52,7 @@ namespace SpellWork
             }
 
             pos = 0;
-            foreach (string str in strsr)
+            foreach (var str in strsr)
             {
                 pos += str.Length + 1;
                 rtb2.Select(pos - str.Length - 1, pos - 1);

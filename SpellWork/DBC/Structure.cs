@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SpellWork
 {
@@ -12,12 +11,12 @@ namespace SpellWork
         public int FieldsCount;
         public int RecordSize;
         public int StringTableSize;
-        
+
         public bool IsDBC
         {
             get { return Signature == 0x43424457; }
         }
-        
+
         public long DataSize
         {
             get { return (long)(RecordsCount * RecordSize); }
@@ -151,25 +150,25 @@ namespace SpellWork
         public uint StartRecoveryTime;                            // 206      m_startRecoveryTime
         public uint MaxTargetLevel;                               // 207      m_maxTargetLevel
         public uint SpellFamilyName;                              // 208      m_spellClassSet
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
         public uint[] SpellFamilyFlags;                           // 209-211  m_spellClassMask NOTE: size is 12 bytes!!!
         public uint MaxAffectedTargets;                           // 212      m_maxTargets
         public uint DmgClass;                                     // 213      m_defenseType
         public uint PreventionType;                               // 214      m_preventionType
         public uint StanceBarOrder;                               // 215      m_stanceBarOrder not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
         public float[] DmgMultiplier;              				  // 216-218  m_effectChainAmplitude
         public uint MinFactionId;                                 // 219      m_minFactionID not used
         public uint MinReputation;                                // 220      m_minReputation not used
         public uint RequiredAuraVision;                           // 221      m_requiredAuraVision not used
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public uint[] TotemCategory;                              // 222-223  m_requiredTotemCategoryID
-        public int  AreaGroupId;                                  // 224      m_requiredAreaGroupId
+        public int AreaGroupId;                                  // 224      m_requiredAreaGroupId
         public uint SchoolMask;                                   // 225      m_schoolMask
         public uint RuneCostID;                                   // 226      m_runeCostID
         public uint SpellMissileID;                               // 227      m_spellMissileID not used
         public uint PowerDisplayId;                               // 228      PowerDisplay.dbc, new in 3.1
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
         public float[] EffectCoeffs;                              // 229-231  3.2.0
         public uint SpellDescriptionVariableID;                   // 232      3.2.0
         public uint SpellDifficultyId;                            // 233      3.3.0                           // 239      3.3.0
@@ -179,7 +178,7 @@ namespace SpellWork
         /// </summary>
         public string SpellName
         {
-            get { return DBC.SpellStrings.GetValue(_SpellName[(uint)DBC.Locale]); }
+            get { return DBC.SpellStrings[_SpellName[(uint)DBC.Locale]]; }
         }
 
         /// <summary>
@@ -192,7 +191,7 @@ namespace SpellWork
 
         public string SpellNameRank
         {
-            get { return Rank.IsEmpty() ? SpellName : String.Format("{0} ({1})", SpellName, Rank); }
+            get { return string.IsNullOrEmpty(Rank) ? SpellName : String.Format("{0} ({1})", SpellName, Rank); }
         }
 
         /// <summary>
@@ -200,7 +199,7 @@ namespace SpellWork
         /// </summary>
         public string Description
         {
-            get { return DBC.SpellStrings.GetValue(_Description[(uint)DBC.Locale]); }
+            get { return DBC.SpellStrings[_Description[(uint)DBC.Locale]]; }
         }
 
         /// <summary>
@@ -208,21 +207,21 @@ namespace SpellWork
         /// </summary>
         public string ToolTip
         {
-            get { return DBC.SpellStrings.GetValue(_ToolTip[(uint)DBC.Locale]); }
+            get { return DBC.SpellStrings[_ToolTip[(uint)DBC.Locale]]; }
         }
 
         public string GetName(byte loc)
         {
-            return DBC.SpellStrings.GetValue(_SpellName[loc]);
+            return DBC.SpellStrings[_SpellName[loc]];
         }
 
         public string ProcInfo
         {
             get
             {
-                int i = 0;
-                StringBuilder sb = new StringBuilder();
-                uint proc = ProcFlags;
+                var i = 0;
+                var sb = new StringBuilder();
+                var proc = ProcFlags;
                 while (proc != 0)
                 {
                     if ((proc & 1) != 0)
@@ -246,8 +245,8 @@ namespace SpellWork
                 if (RangeIndex == 0 || !DBC.SpellRange.ContainsKey(RangeIndex))
                     return String.Empty;
 
-                SpellRangeEntry range = DBC.SpellRange[RangeIndex];
-                StringBuilder sb = new StringBuilder();
+                var range = DBC.SpellRange[RangeIndex];
+                var sb = new StringBuilder();
                 sb.AppendFormatLine("SpellRange: (Id {0}) \"{1}\":", range.ID, range.Description1);
                 sb.AppendFormatLine("    MinRange = {0}, MinRangeFriendly = {1}", range.MinRange, range.MinRangeFriendly);
                 sb.AppendFormatLine("    MaxRange = {0}, MaxRangeFriendly = {1}", range.MaxRange, range.MaxRangeFriendly);
@@ -258,15 +257,15 @@ namespace SpellWork
 
         public string GetRadius(int index)
         {
-            uint rIndex = EffectRadiusIndex[index];
-            if (rIndex != 0)
+            var radiusIndex = EffectRadiusIndex[index];
+            if (radiusIndex != 0)
             {
-                if (DBC.SpellRadius.ContainsKey(rIndex))
-                    return String.Format("Radius (Id {0}) {1:F}", rIndex, DBC.SpellRadius[rIndex].Radius);
+                if (DBC.SpellRadius.ContainsKey(radiusIndex))
+                    return string.Format("Radius (Id {0}) {1:F}", radiusIndex, DBC.SpellRadius[radiusIndex].Radius);
                 else
-                    return String.Format("Radius (Id {0}) Not found", rIndex);
+                    return string.Format("Radius (Id {0}) Not found", radiusIndex);
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         public string CastTime
@@ -274,12 +273,12 @@ namespace SpellWork
             get
             {
                 if (CastingTimeIndex == 0)
-                    return String.Empty;
+                    return string.Empty;
 
                 if (!DBC.SpellCastTimes.ContainsKey(CastingTimeIndex))
-                    return String.Format("CastingTime (Id {0}) = ????", CastingTimeIndex);
+                    return string.Format("CastingTime (Id {0}) = ????", CastingTimeIndex);
                 else
-                    return String.Format("CastingTime (Id {0}) = {1:F}", 
+                    return string.Format("CastingTime (Id {0}) = {1:F}",
                         CastingTimeIndex, DBC.SpellCastTimes[CastingTimeIndex].CastTime / 1000.0f);
             }
         }
@@ -291,16 +290,16 @@ namespace SpellWork
                 if (SpellDifficultyId == 0)
                     return string.Empty;
 
-                StringBuilder builder = new StringBuilder("Spell Difficulty Id: " + SpellDifficultyId);
+                var builder = new StringBuilder("Spell Difficulty Id: " + SpellDifficultyId);
 
                 SpellDifficultyEntry entry;
                 if (DBC.SpellDifficulty.TryGetValue(SpellDifficultyId, out entry))
                 {
                     builder.AppendLine();
 
-                    for (int i = 0; i < entry.Spells.Length; ++i)
+                    for (var i = 0; i < entry.Spells.Length; ++i)
                     {
-                        int spellId = entry.Spells[i];
+                        var spellId = entry.Spells[i];
 
                         builder.AppendFormat("    {0}) {1} - ", i, spellId);
 
@@ -329,34 +328,34 @@ namespace SpellWork
 
     public struct SkillLineEntry
     {
-        public uint ID;                                            // 0        m_ID
-        public int  CategoryId;                                    // 1        m_categoryID
-        public uint SkillCostID;                                   // 2        m_skillCostsID
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-        public uint[] _Name;                                       // 3-18     m_displayName_lang
-        public uint NameFlags;                                     // 19
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-        public uint[] _Description;                                // 20-35    m_description_lang
-        public uint DescriptionFlags;                              // 36
-        public uint SpellIcon;                                     // 37       m_spellIconID
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-        public uint[] _AlternateVerb;                              // 38-53    m_alternateVerb_lang
-        public uint AlternateVerbFlags;                            // 54
-        public uint CanLink;                                       // 55       m_canLink (prof. with recipes
+        public uint ID;                                           // 0        m_ID
+        public int CategoryId;                                    // 1        m_categoryID
+        public uint SkillCostID;                                  // 2        m_skillCostsID
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        public uint[] _Name;                                      // 3-18     m_displayName_lang
+        public uint NameFlags;                                    // 19
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        public uint[] _Description;                               // 20-35    m_description_lang
+        public uint DescriptionFlags;                             // 36
+        public uint SpellIcon;                                    // 37       m_spellIconID
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        public uint[] _AlternateVerb;                             // 38-53    m_alternateVerb_lang
+        public uint AlternateVerbFlags;                           // 54
+        public uint CanLink;                                      // 55       m_canLink (prof. with recipes
 
         public string Name
         {
-            get { return DBC.SkillLineStrings.GetValue(_Name[(uint)DBC.Locale]); }
+            get { return DBC.SkillLineStrings[_Name[(uint)DBC.Locale]]; }
         }
 
         public string Description
         {
-            get { return DBC.SkillLineStrings.GetValue(_Description[(uint)DBC.Locale]); }
+            get { return DBC.SkillLineStrings[_Description[(uint)DBC.Locale]]; }
         }
 
         public string AlternateVerb
         {
-            get { return DBC.SkillLineStrings.GetValue(_AlternateVerb[(uint)DBC.Locale]); }
+            get { return DBC.SkillLineStrings[_AlternateVerb[(uint)DBC.Locale]]; }
         }
     };
 
@@ -380,42 +379,42 @@ namespace SpellWork
 
     public struct SpellRadiusEntry
     {
-        public uint  ID;
+        public uint ID;
         public float Radius;
-        public int   Zero;
+        public int Zero;
         public float Radius2;
     };
 
     public struct SpellRangeEntry
     {
-        public uint  ID;
+        public uint ID;
         public float MinRange;
         public float MinRangeFriendly;
         public float MaxRange;
         public float MaxRangeFriendly;
-        public uint  Field5;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public uint Field5;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
         public uint[] _Desc1;
-        public uint  Desc1Flags;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public uint Desc1Flags;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
         public uint[] _Desc2;
-        public uint  Desc2Flags;
+        public uint Desc2Flags;
 
         public string Description1
         {
-            get { return DBC.SpellRangeStrings.GetValue(_Desc1[(uint)DBC.Locale]); }
+            get { return DBC.SpellRangeStrings[_Desc1[(uint)DBC.Locale]]; }
         }
 
         public string Description2
         {
-            get { return DBC.SpellRangeStrings.GetValue(_Desc2[(uint)DBC.Locale]); }
+            get { return DBC.SpellRangeStrings[_Desc2[(uint)DBC.Locale]]; }
         }
     };
 
     public struct SpellDurationEntry
     {
         public uint ID;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
         public int[] Duration;
 
         public override string ToString()
@@ -426,10 +425,10 @@ namespace SpellWork
 
     public struct SpellCastTimesEntry
     {
-        public uint  ID;
-        public int   CastTime;   
+        public uint ID;
+        public int CastTime;
         public float CastTimePerLevel;
-        public int   MinCastTime;
+        public int MinCastTime;
     };
 
     public struct SpellDifficultyEntry
@@ -454,7 +453,7 @@ namespace SpellWork
 
         public string Name
         {
-            get { return DBC.ScreenEffectStrings.GetValue(_Name); }
+            get { return DBC.ScreenEffectStrings[_Name]; }
         }
     };
 
@@ -471,19 +470,19 @@ namespace SpellWork
 
     public struct SpellProcEventEntry
     {
-        public uint     ID;
-        public string   SpellName;
-        public uint     SchoolMask;
-        public uint     SpellFamilyName;
-        public uint[,]  SpellFamilyMask;
-        public uint     ProcFlags;
-        public uint     ProcEx;
-        public float    PpmRate;
-        public float    CustomChance;
-        public uint     Cooldown;
+        public uint ID;
+        public string SpellName;
+        public uint SchoolMask;
+        public uint SpellFamilyName;
+        public uint[,] SpellFamilyMask;
+        public uint ProcFlags;
+        public uint ProcEx;
+        public float PpmRate;
+        public float CustomChance;
+        public uint Cooldown;
 
         public string[] ToArray()
-        {  
+        {
             return new[]
             {
                 ID.ToString(), 
@@ -519,12 +518,12 @@ namespace SpellWork
 
     public struct Item
     {
-        public uint     Entry;
-        public string   Name;
-        public string   Description;
-        public string   LocalesName;
-        public string   LocalesDescription;
-        public uint[]   SpellID;
+        public uint Entry;
+        public string Name;
+        public string Description;
+        public string LocalesName;
+        public string LocalesDescription;
+        public uint[] SpellID;
     };
 
     public struct AreaGroupEntry
@@ -562,15 +561,15 @@ namespace SpellWork
 
         public string Name
         {
-            get { return DBC.AreaTableStrings.GetValue(NamePtr[(uint)DBC.Locale]); }
+            get { return DBC.AreaTableStrings[NamePtr[(uint)DBC.Locale]]; }
         }
     };
 
     public struct SpellRuneCostEntry
     {
-        public uint  ID;                                             // 0        m_ID
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        public uint[]  RuneCost  ;                                   // 1-3      0=blood, 1=unholy, 2=frost ,3=death
-        public uint  runePowerGain;                                  // 4        m_runicPower
+        public uint ID;                                           // 0        m_ID
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        public uint[] RuneCost;                                   // 1-3      0=blood, 1=unholy, 2=frost ,3=death
+        public uint runePowerGain;                                // 4        m_runicPower
     };
 }

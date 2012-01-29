@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using System.Data;
-using System.Reflection;
 
 namespace SpellWork
 {
@@ -19,7 +20,7 @@ namespace SpellWork
         public static string ReadCString(this BinaryReader reader)
         {
             byte num;
-            List<byte> temp = new List<byte>();
+            var temp = new List<byte>();
 
             while ((num = reader.ReadByte()) != 0)
             {
@@ -35,15 +36,15 @@ namespace SpellWork
         /// <typeparam name="T">Struct type.</typeparam>
         /// <param name="reader">Stream to read from.</param>
         /// <returns>Resulting struct.</returns>
-        public static unsafe T ReadStruct<T>(this BinaryReader reader) where T : struct
+        public static T ReadStruct<T>(this BinaryReader reader) where T : struct
         {
-            byte[] rawData = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
-            
-            GCHandle handle = GCHandle.Alloc(rawData, GCHandleType.Pinned);
-            T returnObject = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
-            
+            var rawData = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
+
+            var handle = GCHandle.Alloc(rawData, GCHandleType.Pinned);
+            var returnObject = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+
             handle.Free();
-            
+
             return returnObject;
         }
 
@@ -83,7 +84,7 @@ namespace SpellWork
             return builder;
         }
 
-        public static uint ToUInt32(this Object val)
+        public static uint ToUInt32(this object val)
         {
             if (val == null)
                 return 0;
@@ -93,9 +94,9 @@ namespace SpellWork
             return num;
         }
 
-        public static int ToInt32(this Object val)
+        public static int ToInt32(this object val)
         {
-            if (val == null) 
+            if (val == null)
                 return 0;
 
             int num;
@@ -103,7 +104,7 @@ namespace SpellWork
             return num;
         }
 
-        public static float ToFloat(this Object val)
+        public static float ToFloat(this object val)
         {
             if (val == null)
                 return 0.0f;
@@ -113,7 +114,7 @@ namespace SpellWork
             return num;
         }
 
-        public static ulong ToUlong(this Object val)
+        public static ulong ToUlong(this object val)
         {
             if (val == null)
                 return 0U;
@@ -123,22 +124,15 @@ namespace SpellWork
             return num;
         }
 
-        public static String NormaliseString(this String text, String remove)
+        public static String NormalizeString(this string text, string remove)
         {
-            var str = String.Empty;
-            if (remove != String.Empty)
-            {
-                text = text.Replace(remove, String.Empty);
-            }
+            if (!string.IsNullOrEmpty(remove))
+                text = text.Replace(remove, string.Empty);
 
+            var str = string.Empty;
             foreach (var s in text.Split('_'))
             {
-                int i = 0;
-                foreach (var c in s.ToCharArray())
-                {
-                    str += i == 0 ? c.ToString().ToUpper() : c.ToString().ToLower();
-                    i++;
-                }
+                str += char.ToUpper(s[0], CultureInfo.CurrentCulture) + s.Substring(1).ToLower(CultureInfo.CurrentCulture);
                 str += " ";
             }
 
@@ -147,7 +141,7 @@ namespace SpellWork
 
         public static void SetCheckedItemFromFlag(this CheckedListBox _name, uint _value)
         {
-            for (int i = 0; i < _name.Items.Count; ++i)
+            for (var i = 0; i < _name.Items.Count; ++i)
             {
                 _name.SetItemChecked(i, ((_value / (1U << (i - 1))) % 2) != 0);
             }
@@ -156,7 +150,7 @@ namespace SpellWork
         public static uint GetFlagsValue(this CheckedListBox _name)
         {
             uint val = 0;
-            for (int i = 0; i < _name.CheckedIndices.Count; i++)
+            for (var i = 0; i < _name.CheckedIndices.Count; i++)
             {
                 val += 1U << (_name.CheckedIndices[i] - 1);
             }
@@ -170,27 +164,27 @@ namespace SpellWork
 
             foreach (var elem in Enum.GetValues(typeof(T)))
             {
-                _clb.Items.Add(elem.ToString().NormaliseString(String.Empty));
+                _clb.Items.Add(elem.ToString().NormalizeString(string.Empty));
             }
         }
 
-        public static void SetFlags<T>(this CheckedListBox _clb, String remove)
+        public static void SetFlags<T>(this CheckedListBox _clb, string remove)
         {
             _clb.Items.Clear();
 
             foreach (var elem in Enum.GetValues(typeof(T)))
             {
-                _clb.Items.Add(elem.ToString().NormaliseString(remove));
+                _clb.Items.Add(elem.ToString().NormalizeString(remove));
             }
         }
 
-        public static void SetFlags(this CheckedListBox _clb, Type type, String remove)
+        public static void SetFlags(this CheckedListBox _clb, Type type, string remove)
         {
             _clb.Items.Clear();
 
             foreach (var elem in Enum.GetValues(type))
             {
-                _clb.Items.Add(elem.ToString().NormaliseString(remove));
+                _clb.Items.Add(elem.ToString().NormalizeString(remove));
             }
         }
 
@@ -200,25 +194,23 @@ namespace SpellWork
             dt.Columns.Add("ID");
             dt.Columns.Add("NAME");
 
-            dt.Rows.Add(new Object[] { -1, NoValue });
+            dt.Rows.Add(new object[] { -1, NoValue });
 
             foreach (var str in Enum.GetValues(typeof(T)))
-            {
-                dt.Rows.Add(new Object[] { (int)str, "(" + ((int)str).ToString("000") + ") " + str });
-            }
+                dt.Rows.Add((int)str, "(" + ((int)str).ToString("000") + ") " + str);
 
             cb.DataSource = dt;
             cb.DisplayMember = "NAME";
             cb.ValueMember = "ID";
         }
 
-        public static void SetEnumValuesDirect<T>(this ComboBox cb, Boolean setFirstValue)
+        public static void SetEnumValuesDirect<T>(this ComboBox cb, bool setFirstValue)
         {
             cb.BeginUpdate();
 
             cb.Items.Clear();
-            foreach (object value in Enum.GetValues(typeof(T)))
-                cb.Items.Add(((Enum)value).GetFullName());
+            foreach (Enum value in Enum.GetValues(typeof(T)))
+                cb.Items.Add(value.GetFullName());
 
             if (setFirstValue && cb.Items.Count > 0)
                 cb.SelectedIndex = 0;
@@ -230,27 +222,27 @@ namespace SpellWork
         {
             cb.Items.Clear();
 
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             dt.Columns.Add("ID", typeof(MemberInfo));
-            dt.Columns.Add("NAME", typeof(String));
+            dt.Columns.Add("NAME", typeof(string));
 
-            var type = typeof(T).GetMembers();
-            int i = 0;
-            foreach (MemberInfo str in type)
+            var members = typeof(T).GetMembers();
+            var i = 0;
+            foreach (var member in members)
             {
-                if (str is FieldInfo || str is PropertyInfo)
+                if (member is FieldInfo || member is PropertyInfo)
                 {
-                    DataRow dr = dt.NewRow();
-                    dr["ID"] = str;
-                    dr["NAME"] = String.Format("({0:000}) {1}", i, str.Name);
+                    var dr = dt.NewRow();
+                    dr["ID"] = member;
+                    dr["NAME"] = string.Format("({0:000}) {1}", i, member.Name);
                     dt.Rows.Add(dr);
                     i++;
                 }
             }
 
-            cb.DataSource    = dt;
+            cb.DataSource = dt;
             cb.DisplayMember = "NAME";
-            cb.ValueMember   = "ID";
+            cb.ValueMember = "ID";
         }
 
         /// <summary>
@@ -261,7 +253,7 @@ namespace SpellWork
         /// <returns>Boolean(true or false)</returns>
         public static bool ContainsText(this string text, string compareText)
         {
-            return (text.ToUpper().IndexOf(compareText.ToUpper(), StringComparison.CurrentCultureIgnoreCase) != -1);
+            return text.IndexOf(compareText, StringComparison.CurrentCultureIgnoreCase) != -1;
         }
 
         /// <summary>
@@ -272,20 +264,19 @@ namespace SpellWork
         /// <returns>Boolean(true or false)</returns>
         public static bool ContainsText(this string text, string[] compareText)
         {
-            foreach (string str in compareText)
-            {
-                if ((text.IndexOf(str, StringComparison.CurrentCultureIgnoreCase) != -1))
+            foreach (var str in compareText)
+                if (text.IndexOf(str, StringComparison.CurrentCultureIgnoreCase) != -1)
                     return true;
-            }
+
             return false;
         }
 
-        public static bool ContainsElement(this uint[] array, uint[] value)
+        public static bool HasAnyFlagOnSameIndex(this uint[] array, uint[] value)
         {
             if (array.Length != value.Length)
-                return false; 
+                return false;
 
-            for(int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 if ((array[i] & value[i]) != 0)
                     return true;
@@ -294,37 +285,12 @@ namespace SpellWork
             return false;
         }
 
-        /// <summary>
-        /// Checks if the specified value in a given array
-        /// </summary>
-        /// <param name="array">Array in which to search</param>
-        /// <param name="value">Meaning Search</param>
-        /// <returns>true or false</returns>
-        public static bool ContainsElement(this uint[] array, uint value)
-        {
-            foreach (uint i in array)
-                if (i == value) return true;
-            return false;
-        }
-
-        public static T GetValue<T>(this Dictionary<uint, T> dictionary, uint key)
-        {
-            T value;
-            dictionary.TryGetValue(key, out value);
-            return value;
-        }
-
-        public static bool IsEmpty(this String str)
-        {
-            return str == String.Empty;
-        }
-
         public static string GetFullName(this Enum _enum)
         {
             var field = _enum.GetType().GetField(_enum.ToString());
             if (field != null)
             {
-                FullNameAttribute[] attrs = (FullNameAttribute[])field.GetCustomAttributes(typeof(FullNameAttribute), false);
+                var attrs = (FullNameAttribute[])field.GetCustomAttributes(typeof(FullNameAttribute), false);
 
                 if (attrs.Length > 0)
                     return attrs[0].FullName;
