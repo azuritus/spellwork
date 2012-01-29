@@ -101,7 +101,7 @@ namespace SpellWork
         {
             var items = DBC.ItemTemplate;
             // In order to reduce the search time, we make the first selection of all items that have spellid
-            var query = String.Format(
+            var query = string.Format(
                 @"SELECT    t.entry, 
                             t.name, 
                             t.description, 

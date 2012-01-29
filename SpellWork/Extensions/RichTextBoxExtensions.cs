@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,11 +12,17 @@ namespace SpellWork
 
         public static void AppendFormatLine(this TextBoxBase textbox, string format, params object[] args)
         {
+            Contract.Requires(format != null);
+            Contract.Requires(args != null);
+
             textbox.AppendText(String.Format(format, args) + Environment.NewLine);
         }
 
         public static void AppendFormat(this TextBoxBase textbox, string format, params object[] args)
         {
+            Contract.Requires(format != null);
+            Contract.Requires(args != null);
+
             textbox.AppendText(String.Format(format, args));
         }
 
@@ -36,30 +43,40 @@ namespace SpellWork
 
         public static void AppendFormatLineIfNotZero(this TextBoxBase builder, string format, uint arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0)
                 builder.AppendFormatLine(format, arg);
         }
 
         public static void AppendFormatLineIfNotZero(this TextBoxBase builder, string format, float arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0.0f)
                 builder.AppendFormatLine(format, arg);
         }
 
         public static void AppendFormatLineIfNotNullOrEmpty(this TextBoxBase builder, string format, string arg)
         {
+            Contract.Requires(format != null);
+
             if (!string.IsNullOrEmpty(arg))
                 builder.AppendFormatLine(format, arg);
         }
 
         public static void AppendFormatIfNotZero(this TextBoxBase builder, string format, uint arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0)
                 builder.AppendFormat(format, arg);
         }
 
         public static void AppendFormatIfNotZero(this TextBoxBase builder, string format, float arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0.0f)
                 builder.AppendFormat(format, arg);
         }

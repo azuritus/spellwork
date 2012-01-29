@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -21,7 +22,7 @@ namespace SpellWork
         {
             byte num;
             var temp = new List<byte>();
-
+            
             while ((num = reader.ReadByte()) != 0)
             {
                 temp.Add(num);
@@ -48,38 +49,40 @@ namespace SpellWork
             return returnObject;
         }
 
-        public static StringBuilder AppendFormatIfNotNull(this StringBuilder builder, string format, params object[] arg)
+        public static StringBuilder AppendFormatIfNotNull(this StringBuilder builder, string format, params object[] args)
         {
-            if (arg[0].ToUInt32() != 0)
-            {
-                return builder.AppendFormat(format, arg);
-            }
+            Contract.Requires(format != null);
+            //FIXME
+            if (args[0].ToUInt32() != 0)
+                return builder.AppendFormat(format, args);
 
             return builder;
         }
 
         // Append Format Line
-        public static StringBuilder AppendFormatLine(this StringBuilder builder, string format, params object[] arg0)
+        public static StringBuilder AppendFormatLine(this StringBuilder builder, string format, params object[] args)
         {
-            return builder.AppendFormat(format, arg0).AppendLine();
+            Contract.Requires(format != null);
+
+            return builder.AppendFormat(format, args).AppendLine();
         }
 
-        public static StringBuilder AppendFormatLineIfNotNull(this StringBuilder builder, string format, int arg)
+        public static StringBuilder AppendFormatLineIfNotZero(this StringBuilder builder, string format, int arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0)
-            {
                 return builder.AppendFormat(format, arg).AppendLine();
-            }
 
             return builder;
         }
 
-        public static StringBuilder AppendFormatLineIfNotNull(this StringBuilder builder, string format, uint arg)
+        public static StringBuilder AppendFormatLineIfNotZero(this StringBuilder builder, string format, uint arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0)
-            {
                 return builder.AppendFormat(format, arg).AppendLine();
-            }
 
             return builder;
         }
@@ -253,6 +256,8 @@ namespace SpellWork
         /// <returns>Boolean(true or false)</returns>
         public static bool ContainsText(this string text, string compareText)
         {
+            Contract.Requires(compareText != null);
+
             return text.IndexOf(compareText, StringComparison.CurrentCultureIgnoreCase) != -1;
         }
 
@@ -264,6 +269,8 @@ namespace SpellWork
         /// <returns>Boolean(true or false)</returns>
         public static bool ContainsText(this string text, string[] compareText)
         {
+            Contract.Requires(compareText != null);
+
             foreach (var str in compareText)
                 if (text.IndexOf(str, StringComparison.CurrentCultureIgnoreCase) != -1)
                     return true;
@@ -273,6 +280,8 @@ namespace SpellWork
 
         public static bool HasAnyFlagOnSameIndex(this uint[] array, uint[] value)
         {
+            Contract.Requires(value != null);
+
             if (array.Length != value.Length)
                 return false;
 

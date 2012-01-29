@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace SpellWork
 
         public ProcInfo(TreeView familyTree, SpellFamilyName spellfamily)
         {
+            Contract.Requires(familyTree != null);
+
             familyTree.Nodes.Clear();
 
             var spells = from Spell in DBC.Spell
