@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -60,6 +61,8 @@ namespace SpellWork
 
         private void SpellFamily_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Contract.Assert(sender is ComboBox);
+
             if (((ComboBox)sender).SelectedIndex != 0)
             {
                 var bFamilyNames = _cbSpellFamily.SelectedIndex != 0;
@@ -111,7 +114,7 @@ namespace SpellWork
 
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!((Char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back)))
+            if (!((char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back)))
                 e.Handled = true;
         }
 
