@@ -559,7 +559,7 @@ namespace SpellWork
             var subquery = sb.ToString().Remove(sb.Length - 2, 2);
             subquery = subquery == "WHERE" ? "" : subquery;
 
-            var query = String.Format("SELECT * FROM `spell_proc_event` {0} ORDER BY entry", subquery);
+            var query = string.Format("SELECT * FROM `spell_proc_event` {0} ORDER BY entry", subquery);
             MySqlConnect.SelectProc(query);
 
             _lvDataList.VirtualListSize = MySqlConnect.SpellProcEvent.Count;
@@ -567,7 +567,7 @@ namespace SpellWork
                 _lvDataList.Items[_lvDataList.SelectedIndices[0]].Selected = false;
 
             // check bad spell and drop
-            foreach (String str in MySqlConnect.Dropped)
+            foreach (var str in MySqlConnect.Dropped)
                 _rtbSqlLog.AppendText(str);
         }
 
