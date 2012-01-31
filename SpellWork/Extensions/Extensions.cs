@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -142,62 +143,62 @@ namespace SpellWork
             return str.Remove(str.Length - 1);
         }
 
-        public static void SetCheckedItemFromFlag(this CheckedListBox _name, uint _value)
+        public static void SetCheckedItemFromFlag(this CheckedListBox name, uint value)
         {
-            for (var i = 0; i < _name.Items.Count; ++i)
+            for (var i = 0; i < name.Items.Count; ++i)
             {
-                _name.SetItemChecked(i, ((_value / (1U << (i - 1))) % 2) != 0);
+                name.SetItemChecked(i, ((value / (1U << (i - 1))) % 2) != 0);
             }
         }
 
-        public static uint GetFlagsValue(this CheckedListBox _name)
+        public static uint GetFlagsValue(this CheckedListBox name)
         {
             uint val = 0;
-            for (var i = 0; i < _name.CheckedIndices.Count; i++)
+            for (var i = 0; i < name.CheckedIndices.Count; i++)
             {
-                val += 1U << (_name.CheckedIndices[i] - 1);
+                val += 1U << (name.CheckedIndices[i] - 1);
             }
 
             return val;
         }
 
-        public static void SetFlags<T>(this CheckedListBox _clb)
+        public static void SetFlags<T>(this CheckedListBox clb)
         {
-            _clb.Items.Clear();
+            clb.Items.Clear();
 
             foreach (var elem in Enum.GetValues(typeof(T)))
             {
-                _clb.Items.Add(elem.ToString().NormalizeString(string.Empty));
+                clb.Items.Add(elem.ToString().NormalizeString(string.Empty));
             }
         }
 
-        public static void SetFlags<T>(this CheckedListBox _clb, string remove)
+        public static void SetFlags<T>(this CheckedListBox clb, string remove)
         {
-            _clb.Items.Clear();
+            clb.Items.Clear();
 
             foreach (var elem in Enum.GetValues(typeof(T)))
             {
-                _clb.Items.Add(elem.ToString().NormalizeString(remove));
+                clb.Items.Add(elem.ToString().NormalizeString(remove));
             }
         }
 
-        public static void SetFlags(this CheckedListBox _clb, Type type, string remove)
+        public static void SetFlags(this CheckedListBox clb, Type type, string remove)
         {
-            _clb.Items.Clear();
+            clb.Items.Clear();
 
             foreach (var elem in Enum.GetValues(type))
             {
-                _clb.Items.Add(elem.ToString().NormalizeString(remove));
+                clb.Items.Add(elem.ToString().NormalizeString(remove));
             }
         }
 
-        public static void SetEnumValues<T>(this ComboBox cb, string NoValue)
+        public static void SetEnumValues<T>(this ComboBox cb, string noValue)
         {
             var dt = new DataTable();
             dt.Columns.Add("ID");
             dt.Columns.Add("NAME");
 
-            dt.Rows.Add(new object[] { -1, NoValue });
+            dt.Rows.Add(new object[] { -1, noValue });
 
             foreach (var str in Enum.GetValues(typeof(T)))
                 dt.Rows.Add((int)str, "(" + ((int)str).ToString("000") + ") " + str);
@@ -271,27 +272,14 @@ namespace SpellWork
         {
             Contract.Requires(compareText != null);
 
-            foreach (var str in compareText)
-                if (text.IndexOf(str, StringComparison.CurrentCultureIgnoreCase) != -1)
-                    return true;
-
-            return false;
+            return compareText.Any(str => text.IndexOf(str, StringComparison.CurrentCultureIgnoreCase) != -1);
         }
 
         public static bool HasAnyFlagOnSameIndex(this uint[] array, uint[] value)
         {
             Contract.Requires(value != null);
 
-            if (array.Length != value.Length)
-                return false;
-
-            for (var i = 0; i < array.Length; i++)
-            {
-                if ((array[i] & value[i]) != 0)
-                    return true;
-            }
-
-            return false;
+            return array.Length == value.Length && array.Where((t, i) => (t & value[i]) != 0).Any();
         }
 
         public static string GetFullName(this Enum _enum)

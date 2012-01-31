@@ -12,19 +12,19 @@ namespace SpellWork
         public int RecordSize;
         public int StringTableSize;
 
-        public bool IsDBC
+        public bool IsDbc
         {
             get { return Signature == 0x43424457; }
         }
 
         public long DataSize
         {
-            get { return (long)(RecordsCount * RecordSize); }
+            get { return RecordsCount * RecordSize; }
         }
 
         public long StartStringPosition
         {
-            get { return DataSize + (long)Marshal.SizeOf(typeof(DbcHeader)); }
+            get { return DataSize + Marshal.SizeOf(typeof(DbcHeader)); }
         }
     };
 
@@ -88,61 +88,61 @@ namespace SpellWork
         public int EquippedItemClass;                             // 68       m_equippedItemClass (value)
         public int EquippedItemSubClassMask;                      // 69       m_equippedItemSubclass (mask)
         public int EquippedItemInventoryTypeMask;                 // 70       m_equippedItemInvTypes (mask)
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] Effect;                     				  // 71-73    m_effect
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] EffectDieSides;                              // 74-76    m_effectDieSides
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public float[] EffectRealPointsPerLevel;                  // 77-79    m_effectRealPointsPerLevel
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] EffectBasePoints;                            // 80-82    m_effectBasePoints (don't must be used in spell/auras explicitly, must be used cached Spell::m_currentBasePoints)
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectMechanic;                             // 83-85    m_effectMechanic
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectImplicitTargetA;                      // 86-88    m_implicitTargetA
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectImplicitTargetB;                      // 89-91    m_implicitTargetB
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectRadiusIndex;                          // 92-94    m_effectRadiusIndex - spellradius.dbc
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectApplyAuraName;                        // 95-97    m_effectAura
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectAmplitude;                            // 98-100   m_effectAuraPeriod
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public float[] EffectMultipleValue;                       // 101-103  m_effectAmplitude
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectChainTarget;                          // 104-106  m_effectChainTargets
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectItemType;                             // 107-109  m_effectItemType
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] EffectMiscValue;                             // 110-112  m_effectMiscValue
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] EffectMiscValueB;                            // 113-115  m_effectMiscValueB
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectTriggerSpell;                         // 116-118  m_effectTriggerSpell
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public float[] EffectPointsPerComboPoint;                 // 119-121  m_effectPointsPerCombo
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectSpellClassMaskA;                      // 122-124  m_effectSpellClassMaskA, effect 0
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectSpellClassMaskB;                      // 125-127  m_effectSpellClassMaskB, effect 1
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectSpellClassMaskC;                      // 128-130  m_effectSpellClassMaskC, effect 2
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public uint[] SpellVisual;                                // 131-132  m_spellVisualID
         public uint SpellIconID;                                  // 133      m_spellIconID
         public uint ActiveIconID;                                 // 134      m_activeIconID
         public uint SpellPriority;                                // 135      m_spellPriority not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         private uint[] _SpellName;                                // 136-151  m_name_lang
         public uint SpellNameFlag;                                // 152      not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         private uint[] _Rank;                                     // 153-168  m_nameSubtext_lang
         public uint RankFlags;                                    // 169      not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         private uint[] _Description;                              // 170-185  m_description_lang not used
         public uint DescriptionFlags;                             // 186      not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         private uint[] _ToolTip;                                  // 187-202  m_auraDescription_lang not used
         public uint ToolTipFlags;                                 // 203      not used
         public uint ManaCostPercentage;                           // 204      m_manaCostPct
@@ -150,13 +150,13 @@ namespace SpellWork
         public uint StartRecoveryTime;                            // 206      m_startRecoveryTime
         public uint MaxTargetLevel;                               // 207      m_maxTargetLevel
         public uint SpellFamilyName;                              // 208      m_spellClassSet
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] SpellFamilyFlags;                           // 209-211  m_spellClassMask NOTE: size is 12 bytes!!!
         public uint MaxAffectedTargets;                           // 212      m_maxTargets
         public uint DmgClass;                                     // 213      m_defenseType
         public uint PreventionType;                               // 214      m_preventionType
         public uint StanceBarOrder;                               // 215      m_stanceBarOrder not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public float[] DmgMultiplier;              				  // 216-218  m_effectChainAmplitude
         public uint MinFactionId;                                 // 219      m_minFactionID not used
         public uint MinReputation;                                // 220      m_minReputation not used
@@ -168,7 +168,7 @@ namespace SpellWork
         public uint RuneCostID;                                   // 226      m_runeCostID
         public uint SpellMissileID;                               // 227      m_spellMissileID not used
         public uint PowerDisplayId;                               // 228      PowerDisplay.dbc, new in 3.1
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public float[] EffectCoeffs;                              // 229-231  3.2.0
         public uint SpellDescriptionVariableID;                   // 232      3.2.0
         public uint SpellDifficultyId;                            // 233      3.3.0                           // 239      3.3.0
@@ -178,7 +178,7 @@ namespace SpellWork
         /// </summary>
         public string SpellName
         {
-            get { return DBC.SpellStrings[_SpellName[(uint)DBC.Locale]]; }
+            get { return Dbc.SpellStrings[_SpellName[(uint)Dbc.Locale]]; }
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace SpellWork
         /// </summary>
         public string Rank
         {
-            get { return _Rank[(uint)DBC.Locale] != 0 ? DBC.SpellStrings[_Rank[(uint)DBC.Locale]] : ""; }
+            get { return _Rank[(uint)Dbc.Locale] != 0 ? Dbc.SpellStrings[_Rank[(uint)Dbc.Locale]] : ""; }
         }
 
         public string SpellNameRank
@@ -199,7 +199,7 @@ namespace SpellWork
         /// </summary>
         public string Description
         {
-            get { return DBC.SpellStrings[_Description[(uint)DBC.Locale]]; }
+            get { return Dbc.SpellStrings[_Description[(uint)Dbc.Locale]]; }
         }
 
         /// <summary>
@@ -207,12 +207,12 @@ namespace SpellWork
         /// </summary>
         public string ToolTip
         {
-            get { return DBC.SpellStrings[_ToolTip[(uint)DBC.Locale]]; }
+            get { return Dbc.SpellStrings[_ToolTip[(uint)Dbc.Locale]]; }
         }
 
         public string GetName(byte loc)
         {
-            return DBC.SpellStrings[_SpellName[loc]];
+            return Dbc.SpellStrings[_SpellName[loc]];
         }
 
         public string ProcInfo
@@ -235,17 +235,17 @@ namespace SpellWork
 
         public string Duration
         {
-            get { return DBC.SpellDuration.ContainsKey(DurationIndex) ? DBC.SpellDuration[DurationIndex].ToString() : String.Empty; }
+            get { return Dbc.SpellDuration.ContainsKey(DurationIndex) ? Dbc.SpellDuration[DurationIndex].ToString() : String.Empty; }
         }
 
         public string Range
         {
             get
             {
-                if (RangeIndex == 0 || !DBC.SpellRange.ContainsKey(RangeIndex))
+                if (RangeIndex == 0 || !Dbc.SpellRange.ContainsKey(RangeIndex))
                     return String.Empty;
 
-                var range = DBC.SpellRange[RangeIndex];
+                var range = Dbc.SpellRange[RangeIndex];
                 var sb = new StringBuilder();
                 sb.AppendFormatLine("SpellRange: (Id {0}) \"{1}\":", range.ID, range.Description1);
                 sb.AppendFormatLine("    MinRange = {0}, MinRangeFriendly = {1}", range.MinRange, range.MinRangeFriendly);
@@ -260,8 +260,8 @@ namespace SpellWork
             var radiusIndex = EffectRadiusIndex[index];
             if (radiusIndex != 0)
             {
-                if (DBC.SpellRadius.ContainsKey(radiusIndex))
-                    return string.Format("Radius (Id {0}) {1:F}", radiusIndex, DBC.SpellRadius[radiusIndex].Radius);
+                if (Dbc.SpellRadius.ContainsKey(radiusIndex))
+                    return string.Format("Radius (Id {0}) {1:F}", radiusIndex, Dbc.SpellRadius[radiusIndex].Radius);
                 else
                     return string.Format("Radius (Id {0}) Not found", radiusIndex);
             }
@@ -275,11 +275,11 @@ namespace SpellWork
                 if (CastingTimeIndex == 0)
                     return string.Empty;
 
-                if (!DBC.SpellCastTimes.ContainsKey(CastingTimeIndex))
+                if (!Dbc.SpellCastTimes.ContainsKey(CastingTimeIndex))
                     return string.Format("CastingTime (Id {0}) = ????", CastingTimeIndex);
                 else
                     return string.Format("CastingTime (Id {0}) = {1:F}",
-                        CastingTimeIndex, DBC.SpellCastTimes[CastingTimeIndex].CastTime / 1000.0f);
+                        CastingTimeIndex, Dbc.SpellCastTimes[CastingTimeIndex].CastTime / 1000.0f);
             }
         }
 
@@ -293,7 +293,7 @@ namespace SpellWork
                 var builder = new StringBuilder("Spell Difficulty Id: " + SpellDifficultyId);
 
                 SpellDifficultyEntry entry;
-                if (DBC.SpellDifficulty.TryGetValue(SpellDifficultyId, out entry))
+                if (Dbc.SpellDifficulty.TryGetValue(SpellDifficultyId, out entry))
                 {
                     builder.AppendLine();
 
@@ -304,10 +304,9 @@ namespace SpellWork
                         builder.AppendFormat("    {0}) {1} - ", i, spellId);
 
                         SpellEntry spell;
-                        if (DBC.Spell.TryGetValue((uint)spellId, out spell))
-                            builder.AppendLine(spell.SpellNameRank);
-                        else
-                            builder.AppendLine("(Not Found in Spell.dbc)");
+                        builder.AppendLine(Dbc.Spell.TryGetValue((uint) spellId, out spell)
+                                               ? spell.SpellNameRank
+                                               : "(Not Found in Spell.dbc)");
                     }
                 }
                 else
@@ -331,31 +330,31 @@ namespace SpellWork
         public uint ID;                                           // 0        m_ID
         public int CategoryId;                                    // 1        m_categoryID
         public uint SkillCostID;                                  // 2        m_skillCostsID
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         public uint[] _Name;                                      // 3-18     m_displayName_lang
         public uint NameFlags;                                    // 19
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         public uint[] _Description;                               // 20-35    m_description_lang
         public uint DescriptionFlags;                             // 36
         public uint SpellIcon;                                    // 37       m_spellIconID
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         public uint[] _AlternateVerb;                             // 38-53    m_alternateVerb_lang
         public uint AlternateVerbFlags;                           // 54
         public uint CanLink;                                      // 55       m_canLink (prof. with recipes
 
         public string Name
         {
-            get { return DBC.SkillLineStrings[_Name[(uint)DBC.Locale]]; }
+            get { return Dbc.SkillLineStrings[_Name[(uint)Dbc.Locale]]; }
         }
 
         public string Description
         {
-            get { return DBC.SkillLineStrings[_Description[(uint)DBC.Locale]]; }
+            get { return Dbc.SkillLineStrings[_Description[(uint)Dbc.Locale]]; }
         }
 
         public string AlternateVerb
         {
-            get { return DBC.SkillLineStrings[_AlternateVerb[(uint)DBC.Locale]]; }
+            get { return Dbc.SkillLineStrings[_AlternateVerb[(uint)Dbc.Locale]]; }
         }
     };
 
@@ -393,28 +392,28 @@ namespace SpellWork
         public float MaxRange;
         public float MaxRangeFriendly;
         public uint Field5;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         public uint[] _Desc1;
         public uint Desc1Flags;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         public uint[] _Desc2;
         public uint Desc2Flags;
 
         public string Description1
         {
-            get { return DBC.SpellRangeStrings[_Desc1[(uint)DBC.Locale]]; }
+            get { return Dbc.SpellRangeStrings[_Desc1[(uint)Dbc.Locale]]; }
         }
 
         public string Description2
         {
-            get { return DBC.SpellRangeStrings[_Desc2[(uint)DBC.Locale]]; }
+            get { return Dbc.SpellRangeStrings[_Desc2[(uint)Dbc.Locale]]; }
         }
     };
 
     public struct SpellDurationEntry
     {
         public uint ID;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] Duration;
 
         public override string ToString()
@@ -453,7 +452,7 @@ namespace SpellWork
 
         public string Name
         {
-            get { return DBC.ScreenEffectStrings[_Name]; }
+            get { return Dbc.ScreenEffectStrings[_Name]; }
         }
     };
 
@@ -547,7 +546,7 @@ namespace SpellWork
         public uint ZoneMusic;
         public uint ZoneIntroMusicTable;
         public int Level;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_DBC_LOCALE)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxDbcLocale)]
         public uint[] NamePtr;
         public uint StringFlags;
         public uint FactionFlags;
@@ -561,14 +560,14 @@ namespace SpellWork
 
         public string Name
         {
-            get { return DBC.AreaTableStrings[NamePtr[(uint)DBC.Locale]]; }
+            get { return Dbc.AreaTableStrings[NamePtr[(uint)Dbc.Locale]]; }
         }
     };
 
     public struct SpellRuneCostEntry
     {
         public uint ID;                                           // 0        m_ID
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DBC.MAX_EFFECT_INDEX)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] RuneCost;                                   // 1-3      0=blood, 1=unholy, 2=frost ,3=death
         public uint runePowerGain;                                // 4        m_runicPower
     };

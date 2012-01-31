@@ -52,10 +52,10 @@
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
     <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
     <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
     <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
     <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
     <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
@@ -70,7 +70,15 @@
     <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>1</CodeContractsAnalysisWarningLevel>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeContractsInferRequires>False</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>False</CodeContractsSuggestRequires>
+    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
+    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
+    <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -116,8 +124,8 @@
     <Compile Include="Forms\FormAboutBox.Designer.cs">
       <DependentUpon>FormAboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="DBC\DBC.cs" />
-    <Compile Include="DBC\DBCReader.cs" />
+    <Compile Include="DBC\Dbc.cs" />
+    <Compile Include="DBC\DbcReader.cs" />
     <Compile Include="Forms\FormCalculateFlags.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,7 +143,7 @@
     </Compile>
     <Compile Include="Extensions\RichTextBoxExtensions.cs" />
     <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="DataBase\MySQLConnect.cs" />
+    <Compile Include="DataBase\MySqlConnect.cs" />
     <Compile Include="Forms\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>

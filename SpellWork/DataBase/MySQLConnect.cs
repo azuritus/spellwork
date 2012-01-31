@@ -5,7 +5,7 @@ using SpellWork.Properties;
 
 namespace SpellWork
 {
-    public static class MySQLConnect
+    public static class MySqlConnect
     {
         private static MySqlConnection _conn;
         private static MySqlCommand _command;
@@ -29,9 +29,9 @@ namespace SpellWork
 
         private static String GetSpellName(uint id)
         {
-            if (DBC.Spell.ContainsKey(id))
+            if (Dbc.Spell.ContainsKey(id))
             {
-                return DBC.Spell[id].SpellNameRank;
+                return Dbc.Spell[id].SpellNameRank;
             }
             else
             {
@@ -63,17 +63,17 @@ namespace SpellWork
                             {
                                 (uint)reader[3 ], 
                                 (uint)reader[4 ], 
-                                (uint)reader[5 ],
+                                (uint)reader[5 ]
                             },
                             {
                                 (uint)reader[6 ], 
                                 (uint)reader[7 ], 
-                                (uint)reader[8 ],
+                                (uint)reader[8 ]
                             },
                             {
                                 (uint)reader[9 ], 
                                 (uint)reader[10], 
-                                (uint)reader[11],
+                                (uint)reader[11]
                             }
                         };
                         str.ProcFlags = reader[12].ToUInt32();
@@ -99,7 +99,7 @@ namespace SpellWork
 
         public static IList<Item> SelectItems()
         {
-            var items = DBC.ItemTemplate;
+            var items = Dbc.ItemTemplate;
             // In order to reduce the search time, we make the first selection of all items that have spellid
             var query = string.Format(
                 @"SELECT    t.entry, 
@@ -124,7 +124,7 @@ namespace SpellWork
                     t.spellid_3 <> 0 || 
                     t.spellid_4 <> 0 || 
                     t.spellid_5 <> 0;",
-                (int)DBC.Locale == 0 ? 1 : (int)DBC.Locale /* it's hack TODO: replace code*/);
+                (int)Dbc.Locale == 0 ? 1 : (int)Dbc.Locale /* it's hack TODO: replace this code*/);
 
             using (_conn = new MySqlConnection(ConnectionString))
             {
@@ -142,7 +142,7 @@ namespace SpellWork
                             Description = reader[2].ToString(),
                             LocalesName = reader[3].ToString(),
                             LocalesDescription = reader[4].ToString(),
-                            SpellID = new uint[] 
+                            SpellID = new[] 
                             { 
                                 reader[5].ToUInt32(), 
                                 reader[6].ToUInt32(), 

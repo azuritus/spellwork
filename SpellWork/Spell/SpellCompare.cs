@@ -11,7 +11,7 @@ namespace SpellWork
         /// <summary>
         /// Search terms
         /// </summary>
-        string[] words = new[] { "=====" };// TODO: more words
+        readonly string[] _words = new[] { "=====" };// TODO: more words
 
         /// <summary>
         /// Compares two spells
@@ -36,14 +36,7 @@ namespace SpellWork
 
                 if (rtb2.Find(str, RichTextBoxFinds.WholeWord) != -1)
                 {
-                    if (str.ContainsText(words))
-                    {
-                        rtb1.SelectionBackColor = rtb1.BackColor;
-                    }
-                    else
-                    {
-                        rtb1.SelectionBackColor = Color.Cyan;
-                    }
+                    rtb1.SelectionBackColor = str.ContainsText(_words) ? rtb1.BackColor : Color.Cyan;
                 }
                 else
                 {
@@ -59,14 +52,7 @@ namespace SpellWork
 
                 if (rtb1.Find(str, RichTextBoxFinds.WholeWord) != -1)
                 {
-                    if (str.ContainsText(words))
-                    {
-                        rtb2.SelectionBackColor = rtb2.BackColor;
-                    }
-                    else
-                    {
-                        rtb2.SelectionBackColor = Color.Cyan;
-                    }
+                    rtb2.SelectionBackColor = str.ContainsText(_words) ? rtb2.BackColor : Color.Cyan;
                 }
                 else
                 {

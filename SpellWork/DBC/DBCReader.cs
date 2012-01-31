@@ -6,12 +6,12 @@ using System.Text;
 
 namespace SpellWork
 {
-    static class DBCReader
+    static class DbcReader
     {
-        public static IDictionary<uint, T> ReadDBC<T>(IDictionary<uint, string> strDict) where T : struct
+        public static IDictionary<uint, T> ReadDbc<T>(IDictionary<uint, string> strDict) where T : struct
         {
             var dict = new Dictionary<uint, T>();
-            var fileName = Path.Combine(DBC.DBC_PATH, typeof(T).Name + ".dbc").Replace("Entry", String.Empty);
+            var fileName = Path.Combine(Dbc.DbcPath, typeof(T).Name + ".dbc").Replace("Entry", String.Empty);
 
             Stream fileStream = null;
             try
@@ -28,7 +28,7 @@ namespace SpellWork
                     var header = reader.ReadStruct<DbcHeader>();
                     var size = Marshal.SizeOf(typeof(T));
 
-                    if (!header.IsDBC)
+                    if (!header.IsDbc)
                         throw new IOException(fileName + " is not DBC file!");
 
                     if (header.RecordSize != size)
@@ -40,9 +40,9 @@ namespace SpellWork
                         var key = reader.ReadUInt32();
                         reader.BaseStream.Position -= 4;
 
-                        var T_entry = reader.ReadStruct<T>();
+                        var entry = reader.ReadStruct<T>();
 
-                        dict.Add(key, T_entry);
+                        dict.Add(key, entry);
                     }
 
                     // read dbc strings

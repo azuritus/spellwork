@@ -7,8 +7,8 @@ namespace SpellWork
 {
     public static class RichTextBoxExtensions
     {
-        private const string DEFAULT_FAMILY = "Arial Unicode MS";
-        private const float DEFAULT_SIZE = 9f;
+        private const string DefaultFontFamily = "Arial Unicode MS";
+        private const float DefaultFontSize = 9f;
 
         public static void AppendFormatLine(this TextBoxBase textbox, string format, params object[] args)
         {
@@ -84,17 +84,17 @@ namespace SpellWork
         public static void SetStyle(this RichTextBox textbox, Color color, FontStyle style)
         {
             textbox.SelectionColor = color;
-            textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, style);
+            textbox.SelectionFont = new Font(DefaultFontFamily, DefaultFontSize, style);
         }
 
         public static void SetBold(this RichTextBox textbox)
         {
-            textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, FontStyle.Bold);
+            textbox.SelectionFont = new Font(DefaultFontFamily, DefaultFontSize, FontStyle.Bold);
         }
 
         public static void SetDefaultStyle(this RichTextBox textbox)
         {
-            textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, FontStyle.Regular);
+            textbox.SelectionFont = new Font(DefaultFontFamily, DefaultFontSize, FontStyle.Regular);
             textbox.SelectionColor = Color.Black;
         }
 

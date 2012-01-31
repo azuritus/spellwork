@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using SpellWork.Properties;
 
@@ -31,11 +25,11 @@ namespace SpellWork
             Settings.Default.Db_mangos = _tbBase.Text;
             Settings.Default.UseDbConnect = _cbUseDBConnect.Checked;
 
-            MySQLConnect.TestConnect();
+            MySqlConnect.TestConnect();
             
             if (((Button)sender).Text != "Save")
             {
-                if (MySQLConnect.Connected)
+                if (MySqlConnect.Connected)
                 {
                     MessageBox.Show("Connection is successfully!", "MySQL Connections!",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);

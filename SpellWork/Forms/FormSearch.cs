@@ -32,7 +32,7 @@ namespace SpellWork
                 uint ic = _tbIcon.Text.ToUInt32();
                 uint at = _tbAttribute.Text.ToUInt32();
 
-                _spellList = (from spell in DBC.Spell.Values
+                _spellList = (from spell in Dbc.Spell.Values
 
                               where ((id == 0 || spell.ID == id)
 
@@ -80,7 +80,7 @@ namespace SpellWork
                 var bTarget2 = _cbTarget2.SelectedIndex != 0;
                 var fTarget2 = _cbTarget2.SelectedValue.ToInt32();
 
-                _spellList = (from spell in DBC.Spell.Values
+                _spellList = (from spell in Dbc.Spell.Values
                               where (!bFamilyNames || spell.SpellFamilyName == fFamilyNames)
                                  && (!bSpellEffect || spell.Effect.Contains((uint)fSpellEffect))
                                  && (!bSpellAura || spell.EffectApplyAuraName.Contains((uint)fSpellAura))

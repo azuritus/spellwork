@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reflection;
 
 namespace SpellWork
@@ -41,17 +42,17 @@ namespace SpellWork
         /// Compares two values object
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="T_entry"></param>
+        /// <param name="entry"></param>
         /// <param name="field">Value Type is MemberInfo</param>
         /// <param name="value"></param>
+        /// <param name="compareType">comparison type</param>
         /// <returns></returns>
-        public static bool CreateFilter<T>(this T T_entry, object field, object value, CompareType compareType)
+        public static bool CreateFilter<T>(this T entry, MemberInfo field, object value, CompareType compareType)
         {
-            Contract.Requires(T_entry != null);
             Contract.Requires(field != null);
             Contract.Requires(value != null);
 
-            var basicValue = GetValue<T>(T_entry, (MemberInfo)field);
+            var basicValue = GetValue(entry, field);
 
             switch (basicValue.GetType().Name)
             {
@@ -67,43 +68,23 @@ namespace SpellWork
                     return Compare(basicValue.ToString(), value.ToString(), compareType);
                 case @"UInt32[]":
                     {
-                        var val_uint = value.ToUInt32();
-                        foreach (var el in (uint[])basicValue)
-                        {
-                            if (Compare(el, val_uint, compareType))
-                                return true;
-                        }
-                        return false;
+                        var val = value.ToUInt32();
+                        return ((uint[]) basicValue).Any(el => Compare(el, val, compareType));
                     }
                 case @"Int32[]":
                     {
-                        var val_int = value.ToInt32();
-                        foreach (var el in (int[])basicValue)
-                        {
-                            if (Compare(el, val_int, compareType))
-                                return true;
-                        }
-                        return false;
+                        var val = value.ToInt32();
+                        return ((int[]) basicValue).Any(el => Compare(el, val, compareType));
                     }
                 case @"Single[]":
                     {
-                        var val_float = value.ToFloat();
-                        foreach (var el in (float[])basicValue)
-                        {
-                            if (Compare(el, val_float, compareType))
-                                return true;
-                        }
-                        return false;
+                        var val = value.ToFloat();
+                        return ((float[]) basicValue).Any(el => Compare(el, val, compareType));
                     }
                 case @"UInt64[]":
                     {
-                        var val_ulong = value.ToUlong();
-                        foreach (var el in (ulong[])basicValue)
-                        {
-                            if (Compare(el, val_ulong, compareType))
-                                return true;
-                        }
-                        return false;
+                        var val = value.ToUlong();
+                        return ((ulong[]) basicValue).Any(el => Compare(el, val, compareType));
                     }
                 default:
                     return false;
@@ -242,15 +223,15 @@ namespace SpellWork
 
         #endregion
 
-        private static object GetValue<T>(T T_entry, MemberInfo field)
+        private static object GetValue<T>(T entry, MemberInfo field)
         {
-            Contract.Requires(T_entry != null);
+            Contract.Requires(entry != null);
             Contract.Requires(field != null);
 
             if (field is FieldInfo)
-                return typeof(T).GetField(field.Name).GetValue(T_entry);
+                return typeof(T).GetField(field.Name).GetValue(entry);
             else if (field is PropertyInfo)
-                return typeof(T).GetProperty(field.Name).GetValue(T_entry, null);
+                return typeof(T).GetProperty(field.Name).GetValue(entry, null);
             else
                 return null;
         }

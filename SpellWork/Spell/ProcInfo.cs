@@ -18,17 +18,17 @@ namespace SpellWork
 
             familyTree.Nodes.Clear();
 
-            var spells = from Spell in DBC.Spell
-                         where Spell.Value.SpellFamilyName == (uint)spellfamily
-                         join sk in DBC.SkillLineAbility on Spell.Key equals sk.Value.SpellId into temp1
-                         from Skill in temp1.DefaultIfEmpty()
-                         join skl in DBC.SkillLine on Skill.Value.SkillId equals skl.Key into temp2
-                         from SkillLine in temp2.DefaultIfEmpty()
+            var spells = from spell in Dbc.Spell
+                         where spell.Value.SpellFamilyName == (uint)spellfamily
+                         join sk in Dbc.SkillLineAbility on spell.Key equals sk.Value.SpellId into temp1
+                         from skill in temp1.DefaultIfEmpty()
+                         join skl in Dbc.SkillLine on skill.Value.SkillId equals skl.Key into temp2
+                         from skillLine in temp2.DefaultIfEmpty()
                          select new
                          {
-                             Spell,
-                             Skill.Value.SkillId,
-                             SkillLine.Value
+                             spell,
+                             skill.Value.SkillId,
+                             skillLine.Value
                          };
 
             for (var i = 0; i < 96; i++)
@@ -42,16 +42,18 @@ namespace SpellWork
                 else
                     mask[2] = 1U << (i - 64);
 
-                var node = new TreeNode();
-                node.Text = String.Format("0x{0:X8} {1:X8} {2:X8}", mask[2], mask[1], mask[0]);
-                node.ImageKey = "family.ico";
+                var node = new TreeNode
+                               {
+                                   Text = String.Format("0x{0:X8} {1:X8} {2:X8}", mask[2], mask[1], mask[0]),
+                                   ImageKey = "family.ico"
+                               };
                 familyTree.Nodes.Add(node);
             }
 
             foreach (var elem in spells)
             {
-                var spell = elem.Spell.Value;
-                var IsSkill = elem.SkillId != 0;
+                var spell = elem.spell.Value;
+                var isSkill = elem.SkillId != 0;
 
                 var name = new StringBuilder();
                 var toolTip = new StringBuilder();
@@ -62,7 +64,7 @@ namespace SpellWork
                 toolTip.AppendFormatLine("Description: {0}", spell.Description);
                 toolTip.AppendFormatLine("ToolTip: {0}", spell.ToolTip);
 
-                if (IsSkill)
+                if (isSkill)
                 {
                     name.AppendFormat("(Skill: ({0}) {1}) ", elem.SkillId, elem.Value.Name);
 
@@ -86,11 +88,10 @@ namespace SpellWork
 
                     if ((spell.SpellFamilyFlags.HasAnyFlagOnSameIndex(mask)))
                     {
-                        var child = new TreeNode();
-                        child = node.Nodes.Add(name.ToString());
+                        var child = node.Nodes.Add(name.ToString());
                         child.Name = spell.ID.ToString();
-                        child.ImageKey = IsSkill ? "plus.ico" : "munus.ico";
-                        child.ForeColor = IsSkill ? Color.Blue : Color.Red;
+                        child.ImageKey = isSkill ? "plus.ico" : "munus.ico";
+                        child.ForeColor = isSkill ? Color.Blue : Color.Red;
                         child.ToolTipText = toolTip.ToString();
                     }
                 }
