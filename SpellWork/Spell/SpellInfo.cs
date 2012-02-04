@@ -421,7 +421,7 @@ namespace SpellWork
                 _rtb.AppendFormatLineIfNotZero("EffectItemType = {0}", _spell.EffectItemType[effectIndex]);
 
                 if (_spell.EffectMechanic[effectIndex] != Mechanic.MECHANIC_NONE)
-                    _rtb.AppendFormatLine("Effect Mechanic = {0} ({1})", _spell.EffectMechanic[effectIndex], (Mechanic)_spell.EffectMechanic[effectIndex]);
+                    _rtb.AppendFormatLine("Effect Mechanic = {0:D} ({1})", _spell.EffectMechanic[effectIndex], _spell.EffectMechanic[effectIndex]);
 
                 _rtb.AppendLine();
             }

@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -35,14 +37,14 @@ namespace SpellWork
         public uint Category;                                     // 1        m_category
         public DispelType Dispel;                                 // 2        m_dispelType
         public Mechanic Mechanic;                                 // 3        m_mechanic
-        public SpellAtribute0 Attributes;                          // 4        m_attribute
-        public SpellAtribute1 AttributesEx;                      // 5        m_attributesEx
-        public SpellAtribute2 AttributesEx2;                    // 6        m_attributesExB
-        public SpellAtribute3 AttributesEx3;                    // 7        m_attributesExC
-        public SpellAtribute4 AttributesEx4;                    // 8        m_attributesExD
-        public SpellAtribute5 AttributesEx5;                    // 9        m_attributesExE
-        public SpellAtribute6 AttributesEx6;                    // 10       m_attributesExF
-        public SpellAtribute7 AttributesEx7;                    // 11       3.2.0 (0x20 - totems, 0x4 - paladin auras, etc...)
+        public SpellAtribute0 Attributes;                         // 4        m_attribute
+        public SpellAtribute1 AttributesEx;                       // 5        m_attributesEx
+        public SpellAtribute2 AttributesEx2;                      // 6        m_attributesExB
+        public SpellAtribute3 AttributesEx3;                      // 7        m_attributesExC
+        public SpellAtribute4 AttributesEx4;                      // 8        m_attributesExD
+        public SpellAtribute5 AttributesEx5;                      // 9        m_attributesExE
+        public SpellAtribute6 AttributesEx6;                      // 10       m_attributesExF
+        public SpellAtribute7 AttributesEx7;                      // 11       3.2.0 (0x20 - totems, 0x4 - paladin auras, etc...)
         public ShapeshiftFormMask Stances;                        // 12-13    m_shapeshiftMask
         public ShapeshiftFormMask StancesNot;                     // 14-15    m_shapeshiftExclude
         public SpellCastTargetFlag Targets;                       // 16       m_targets
@@ -255,16 +257,18 @@ namespace SpellWork
             }
         }
 
-        public string GetRadius(int index)
+        [Pure]
+        public string GetRadius(int effectIndex)
         {
-            var radiusIndex = EffectRadiusIndex[index];
+            Contract.Requires(effectIndex >= 0 && effectIndex < Dbc.MaxEffectIndex);
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            var radiusIndex = EffectRadiusIndex[effectIndex];
             if (radiusIndex != 0)
-            {
-                if (Dbc.SpellRadius.ContainsKey(radiusIndex))
-                    return string.Format("Radius (Id {0}) {1:F}", radiusIndex, Dbc.SpellRadius[radiusIndex].Radius);
-                else
-                    return string.Format("Radius (Id {0}) Not found", radiusIndex);
-            }
+                return Dbc.SpellRadius.ContainsKey(radiusIndex) ?
+                    string.Format("Radius (Id {0}) {1:F}", radiusIndex, Dbc.SpellRadius[radiusIndex].Radius) :
+                    string.Format("Radius (Id {0}) Not found", radiusIndex);
+
             return string.Empty;
         }
 
@@ -304,7 +308,7 @@ namespace SpellWork
                         builder.AppendFormat("    {0}) {1} - ", i, spellId);
 
                         SpellEntry spell;
-                        builder.AppendLine(Dbc.Spell.TryGetValue((uint) spellId, out spell)
+                        builder.AppendLine(Dbc.Spell.TryGetValue((uint)spellId, out spell)
                                                ? spell.SpellNameRank
                                                : "(Not Found in Spell.dbc)");
                     }
@@ -408,8 +412,11 @@ namespace SpellWork
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] Duration;
 
+        [Pure]
         public override string ToString()
         {
+            Contract.Ensures(Contract.Result<string>() != null);
+
             return String.Format("Duration: ID ({0})  {1}, {2}, {3}", ID, Duration[0], Duration[1], Duration[2]);
         }
     };
@@ -472,28 +479,31 @@ namespace SpellWork
         public float CustomChance;
         public uint Cooldown;
 
+        [Pure]
         public string[] ToArray()
         {
+            Contract.Ensures(Contract.Result<string[]>() != null);
+
             return new[]
             {
-                ID.ToString(), 
+                ID.ToString(CultureInfo.InvariantCulture), 
                 SpellName, 
-                SchoolMask.ToString(), 
-                SpellFamilyName.ToString(), 
-                SpellFamilyMask[0,0].ToString(), 
-                SpellFamilyMask[0,1].ToString(), 
-                SpellFamilyMask[0,2].ToString(), 
-                SpellFamilyMask[1,0].ToString(), 
-                SpellFamilyMask[1,1].ToString(), 
-                SpellFamilyMask[1,2].ToString(),
-                SpellFamilyMask[2,0].ToString(), 
-                SpellFamilyMask[2,1].ToString(), 
-                SpellFamilyMask[2,2].ToString(),
-                ProcFlags.ToString(), 
-                ProcEx.ToString(), 
-                PpmRate.ToString(), 
-                CustomChance.ToString(), 
-                Cooldown.ToString()
+                SchoolMask.ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyName.ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[0,0].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[0,1].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[0,2].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[1,0].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[1,1].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[1,2].ToString(CultureInfo.InvariantCulture),
+                SpellFamilyMask[2,0].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[2,1].ToString(CultureInfo.InvariantCulture), 
+                SpellFamilyMask[2,2].ToString(CultureInfo.InvariantCulture),
+                ProcFlags.ToString(CultureInfo.InvariantCulture), 
+                ProcEx.ToString(CultureInfo.InvariantCulture), 
+                PpmRate.ToString(CultureInfo.InvariantCulture), 
+                CustomChance.ToString(CultureInfo.InvariantCulture), 
+                Cooldown.ToString(CultureInfo.InvariantCulture)
             };
         }
     };
