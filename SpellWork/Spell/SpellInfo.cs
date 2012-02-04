@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,7 +8,7 @@ namespace SpellWork
     class SpellInfo
     {
         private readonly RichTextBox _rtb;
-        private SpellEntry _spell;
+        private readonly SpellEntry _spell;
 
         private const string Line = "=================================================";
 
@@ -39,57 +40,57 @@ namespace SpellWork
                 _spell.Category, _spell.SpellIconID, _spell.ActiveIconID, _spell.SpellVisual[0], _spell.SpellVisual[1]);
 
             _rtb.AppendFormatLine("Family {0}, flag 0x{1:X8} {2:X8} {3:X8}",
-                (SpellFamilyName)_spell.SpellFamilyName, _spell.SpellFamilyFlags[2], _spell.SpellFamilyFlags[1], _spell.SpellFamilyFlags[0]);
+                _spell.SpellFamilyName, _spell.SpellFamilyFlags[2], _spell.SpellFamilyFlags[1], _spell.SpellFamilyFlags[0]);
 
             _rtb.AppendLine();
 
-            _rtb.AppendFormatLine("SpellSchoolMask = {0} ({1})", _spell.SchoolMask, _spell.School);
-            _rtb.AppendFormatLine("DamageClass = {0} ({1})", _spell.DmgClass, (SpellDmgClass)_spell.DmgClass);
-            _rtb.AppendFormatLine("PreventionType = {0} ({1})", _spell.PreventionType, (SpellPreventionType)_spell.PreventionType);
+            _rtb.AppendFormatLine("SpellSchoolMask = {0:D} ({1})", _spell.SchoolMask, _spell.SchoolMask);
+            _rtb.AppendFormatLine("DamageClass = {0:D} ({1})", _spell.DmgClass, _spell.DmgClass);
+            _rtb.AppendFormatLine("PreventionType = {0:D} ({1})", _spell.PreventionType, _spell.PreventionType);
 
             if (_spell.Attributes != 0 || _spell.AttributesEx != 0 || _spell.AttributesEx2 != 0 || _spell.AttributesEx3 != 0
                 || _spell.AttributesEx4 != 0 || _spell.AttributesEx5 != 0 || _spell.AttributesEx6 != 0 || _spell.AttributesEx7 != 0)
                 _rtb.AppendLine(Line);
 
             if (_spell.Attributes != 0)
-                _rtb.AppendFormatLine("Attributes: 0x{0:X8} ({1})", _spell.Attributes, (SpellAtribute)_spell.Attributes);
+                _rtb.AppendFormatLine("Attributes0: 0x{0:X} ({1})", _spell.Attributes, _spell.Attributes);
             if (_spell.AttributesEx != 0)
-                _rtb.AppendFormatLine("AttributesEx1: 0x{0:X8} ({1})", _spell.AttributesEx, (SpellAtributeEx)_spell.AttributesEx);
+                _rtb.AppendFormatLine("Attributes1: 0x{0:X} ({1})", _spell.AttributesEx, _spell.AttributesEx);
             if (_spell.AttributesEx2 != 0)
-                _rtb.AppendFormatLine("AttributesEx2: 0x{0:X8} ({1})", _spell.AttributesEx2, (SpellAtributeEx2)_spell.AttributesEx2);
+                _rtb.AppendFormatLine("Attributes2: 0x{0:X} ({1})", _spell.AttributesEx2, _spell.AttributesEx2);
             if (_spell.AttributesEx3 != 0)
-                _rtb.AppendFormatLine("AttributesEx3: 0x{0:X8} ({1})", _spell.AttributesEx3, (SpellAtributeEx3)_spell.AttributesEx3);
+                _rtb.AppendFormatLine("Attributes3: 0x{0:X} ({1})", _spell.AttributesEx3, _spell.AttributesEx3);
             if (_spell.AttributesEx4 != 0)
-                _rtb.AppendFormatLine("AttributesEx4: 0x{0:X8} ({1})", _spell.AttributesEx4, (SpellAtributeEx4)_spell.AttributesEx4);
+                _rtb.AppendFormatLine("Attributes4: 0x{0:X} ({1})", _spell.AttributesEx4, _spell.AttributesEx4);
             if (_spell.AttributesEx5 != 0)
-                _rtb.AppendFormatLine("AttributesEx5: 0x{0:X8} ({1})", _spell.AttributesEx5, (SpellAtributeEx5)_spell.AttributesEx5);
+                _rtb.AppendFormatLine("Attributes5: 0x{0:X} ({1})", _spell.AttributesEx5, _spell.AttributesEx5);
             if (_spell.AttributesEx6 != 0)
-                _rtb.AppendFormatLine("AttributesEx6: 0x{0:X8} ({1})", _spell.AttributesEx6, (SpellAtributeEx6)_spell.AttributesEx6);
+                _rtb.AppendFormatLine("Attributes6: 0x{0:X} ({1})", _spell.AttributesEx6, _spell.AttributesEx6);
             if (_spell.AttributesEx7 != 0)
-                _rtb.AppendFormatLine("AttributesEx7: 0x{0:X8} ({1})", _spell.AttributesEx7, (SpellAtributeEx7)_spell.AttributesEx7);
+                _rtb.AppendFormatLine("Attributes7: 0x{0:X} ({1})", _spell.AttributesEx7, _spell.AttributesEx7);
 
             _rtb.AppendLine(Line);
 
             if (_spell.Targets != 0)
-                _rtb.AppendFormatLine("Targets Mask = 0x{0:X8} ({1})", _spell.Targets, (SpellCastTargetFlag)_spell.Targets);
+                _rtb.AppendFormatLine("Targets Mask = {0:D} ({1})", _spell.Targets, _spell.Targets);
 
             if (_spell.TargetCreatureType != 0)
-                _rtb.AppendFormatLine("Creature Type Mask = 0x{0:X8} ({1})",
-                    _spell.TargetCreatureType, (CreatureTypeMask)_spell.TargetCreatureType);
+                _rtb.AppendFormatLine("Creature Type Mask = 0x{0:X} ({1})",
+                    _spell.TargetCreatureType, _spell.TargetCreatureType);
 
             if (_spell.Stances != 0)
-                _rtb.AppendFormatLine("Stances: {0}", (ShapeshiftFormMask)_spell.Stances);
+                _rtb.AppendFormatLine("Stances: {0}", _spell.Stances);
 
             if (_spell.StancesNot != 0)
-                _rtb.AppendFormatLine("Stances Not: {0}", (ShapeshiftFormMask)_spell.StancesNot);
+                _rtb.AppendFormatLine("Stances Not: {0}", _spell.StancesNot);
 
             AppendSkillLine();
 
             // reagents
             var printedHeader = false;
-            for (var i = 0; i < _spell.Reagent.Length; ++i)
+            for (var reagentIndex = 0; reagentIndex < _spell.Reagent.Length; ++reagentIndex)
             {
-                if (_spell.Reagent[i] == 0)
+                if (_spell.Reagent[reagentIndex] == 0)
                     continue;
 
                 if (!printedHeader)
@@ -99,7 +100,7 @@ namespace SpellWork
                     printedHeader = true;
                 }
 
-                _rtb.AppendFormat("  {0}x{1}", _spell.Reagent[i], _spell.ReagentCount[i]);
+                _rtb.AppendFormat("  {0}x{1}", _spell.Reagent[reagentIndex], _spell.ReagentCount[reagentIndex]);
             }
 
             if (printedHeader)
@@ -108,38 +109,38 @@ namespace SpellWork
             _rtb.AppendFormatLine("Spell Level = {0}, base {1}, max {2}, maxTarget {3}",
                 _spell.SpellLevel, _spell.BaseLevel, _spell.MaxLevel, _spell.MaxTargetLevel);
 
-            if (_spell.EquippedItemClass != -1)
+            if (_spell.EquippedItemClass != ItemClass.NoClass)
             {
-                _rtb.AppendFormatLine("EquippedItemClass = {0} ({1})", _spell.EquippedItemClass, (ItemClass)_spell.EquippedItemClass);
+                _rtb.AppendFormatLine("EquippedItemClass = {0} ({1})", _spell.EquippedItemClass, _spell.EquippedItemClass);
 
                 if (_spell.EquippedItemSubClassMask != 0)
                 {
-                    switch ((ItemClass)_spell.EquippedItemClass)
+                    switch (_spell.EquippedItemClass)
                     {
                         case ItemClass.WEAPON:
-                            _rtb.AppendFormatLine("    SubClass mask 0x{0:X8} ({1})",
-                                _spell.EquippedItemSubClassMask, (ItemSubClassWeaponMask)_spell.EquippedItemSubClassMask);
+                            _rtb.AppendFormatLine("    SubClass mask 0x{0:X} ({1})",
+                                (ItemSubClassWeaponMask)_spell.EquippedItemSubClassMask, (ItemSubClassWeaponMask)_spell.EquippedItemSubClassMask);
                             break;
                         case ItemClass.ARMOR:
-                            _rtb.AppendFormatLine("    SubClass mask 0x{0:X8} ({1})",
-                                _spell.EquippedItemSubClassMask, (ItemSubClassArmorMask)_spell.EquippedItemSubClassMask);
+                            _rtb.AppendFormatLine("    SubClass mask 0x{0:X} ({1})",
+                                (ItemSubClassArmorMask)_spell.EquippedItemSubClassMask, (ItemSubClassArmorMask)_spell.EquippedItemSubClassMask);
                             break;
                         case ItemClass.MISC:
-                            _rtb.AppendFormatLine("    SubClass mask 0x{0:X8} ({1})",
-                                _spell.EquippedItemSubClassMask, (ItemSubClassMiscMask)_spell.EquippedItemSubClassMask);
+                            _rtb.AppendFormatLine("    SubClass mask 0x{0:X} ({1})",
+                                (ItemSubClassMiscMask)_spell.EquippedItemSubClassMask, (ItemSubClassMiscMask)_spell.EquippedItemSubClassMask);
                             break;
                     }
                 }
 
                 if (_spell.EquippedItemInventoryTypeMask != 0)
-                    _rtb.AppendFormatLine("    InventoryType mask = 0x{0:X8} ({1})",
-                        _spell.EquippedItemInventoryTypeMask, (InventoryTypeMask)_spell.EquippedItemInventoryTypeMask);
+                    _rtb.AppendFormatLine("    InventoryType mask = 0x{0:X} ({1})",
+                        _spell.EquippedItemInventoryTypeMask, _spell.EquippedItemInventoryTypeMask);
             }
 
             _rtb.AppendLine();
             _rtb.AppendFormatLine("Category = {0}", _spell.Category);
-            _rtb.AppendFormatLine("DispelType = {0} ({1})", _spell.Dispel, (DispelType)_spell.Dispel);
-            _rtb.AppendFormatLine("Mechanic = {0} ({1})", _spell.Mechanic, (Mechanic)_spell.Mechanic);
+            _rtb.AppendFormatLine("DispelType = {0:D} ({1})", _spell.Dispel, _spell.Dispel);
+            _rtb.AppendFormatLine("Mechanic = {0:D} ({1})", _spell.Mechanic, _spell.Mechanic);
 
             _rtb.AppendLine(_spell.Range);
 
@@ -161,7 +162,7 @@ namespace SpellWork
             if (_spell.ManaCost != 0 || _spell.ManaCostPercentage != 0)
             {
                 _rtb.AppendFormat("Power {0}, Cost {1}",
-                    (Power)_spell.PowerType, _spell.ManaCost == 0 ? _spell.ManaCostPercentage.ToString() + " %" : _spell.ManaCost.ToString());
+                    _spell.PowerType, _spell.ManaCost == 0 ? _spell.ManaCostPercentage.ToString(CultureInfo.InvariantCulture) + " %" : _spell.ManaCost.ToString(CultureInfo.InvariantCulture));
                 _rtb.AppendFormatIfNotZero(" + lvl * {0}", _spell.ManaCostPerlevel);
                 _rtb.AppendFormatIfNotZero(" + {0} Per Second", _spell.ManaPerSecond);
                 _rtb.AppendFormatIfNotZero(" + lvl * {0}", _spell.ManaPerSecondPerLevel);
@@ -170,27 +171,27 @@ namespace SpellWork
 
             if (_spell.RuneCostID != 0 && Dbc.SpellRuneCost.ContainsKey(_spell.RuneCostID))
             {
-                var R = Dbc.SpellRuneCost[_spell.RuneCostID];
+                var runeCost = Dbc.SpellRuneCost[_spell.RuneCostID];
 
                 var append = true;
-                for (var i = 0; i < R.RuneCost.Length; ++i)
+                for (var rune = 0; rune < runeCost.RuneCost.Length; ++rune)
                 {
-                    if (R.RuneCost[i] != 0)
+                    if (runeCost.RuneCost[rune] == 0)
+                        continue;
+
+                    if (append)
                     {
-                        if (append)
-                        {
-                            _rtb.AppendLine(Line);
-                            _rtb.Append("Rune cost: ");
-                        }
-                        _rtb.AppendFormat("{0}x{1} ", (RuneType)i, R.RuneCost[i]);
-                        append = false;
+                        _rtb.AppendLine(Line);
+                        _rtb.Append("Rune cost: ");
                     }
+                    _rtb.AppendFormat("{0}x{1} ", (RuneType)rune, runeCost.RuneCost[rune]);
+                    append = false;
                 }
 
                 if (!append)
                     _rtb.AppendLine();
 
-                _rtb.AppendFormatLineIfNotZero("Rune power gain ={0}", R.runePowerGain);
+                _rtb.AppendFormatLineIfNotZero("Rune power gain = {0}", runeCost.runePowerGain);
                 if (!append)
                     _rtb.AppendLine(Line);
             }
@@ -199,16 +200,16 @@ namespace SpellWork
                 _spell.InterruptFlags, _spell.AuraInterruptFlags, _spell.ChannelInterruptFlags);
 
             if (_spell.CasterAuraState != 0)
-                _rtb.AppendFormatLine("CasterAuraState = {0} ({1})", _spell.CasterAuraState, (AuraState)_spell.CasterAuraState);
+                _rtb.AppendFormatLine("CasterAuraState = {0:D} ({1})", _spell.CasterAuraState, _spell.CasterAuraState);
 
             if (_spell.TargetAuraState != 0)
-                _rtb.AppendFormatLine("TargetAuraState = {0} ({1})", _spell.TargetAuraState, (AuraState)_spell.TargetAuraState);
+                _rtb.AppendFormatLine("TargetAuraState = {0:D} ({1})", _spell.TargetAuraState, _spell.TargetAuraState);
 
             if (_spell.CasterAuraStateNot != 0)
-                _rtb.AppendFormatLine("CasterAuraStateNot = {0} ({1})", _spell.CasterAuraStateNot, (AuraState)_spell.CasterAuraStateNot);
+                _rtb.AppendFormatLine("CasterAuraStateNot = {0:D} ({1})", _spell.CasterAuraStateNot, _spell.CasterAuraStateNot);
 
             if (_spell.TargetAuraStateNot != 0)
-                _rtb.AppendFormatLine("TargetAuraStateNot = {0} ({1})", _spell.TargetAuraStateNot, (AuraState)_spell.TargetAuraStateNot);
+                _rtb.AppendFormatLine("TargetAuraStateNot = {0:D} ({1})", _spell.TargetAuraStateNot, _spell.TargetAuraStateNot);
 
             AppendSpellAura();
 
@@ -255,13 +256,12 @@ namespace SpellWork
                 for (var i = 0; i < 6; ++i)
                 {
                     var areaId = groupEntry.AreaId[i];
-                    if (Dbc.AreaTable.ContainsKey(areaId))
-                    {
-                        var areaEntry = Dbc.AreaTable[areaId];
-                        _rtb.AppendFormatLine("{0} - {1} (Map: {2})", areaId, areaEntry.Name, areaEntry.MapId);
-                    }
-                }
+                    if (!Dbc.AreaTable.ContainsKey(areaId))
+                        continue;
 
+                    var areaEntry = Dbc.AreaTable[areaId];
+                    _rtb.AppendFormatLine("{0} - {1} (Map: {2})", areaId, areaEntry.Name, areaEntry.MapId);
+                }
 
                 if (groupEntry.NextGroup == 0)
                     break;
@@ -276,14 +276,14 @@ namespace SpellWork
         private void AppendSkillLine()
         {
             var query = (from skillLineAbility in Dbc.SkillLineAbility
-                        join skillLine in Dbc.SkillLine
-                        on skillLineAbility.Value.SkillId equals skillLine.Key
-                        where skillLineAbility.Value.SpellId == _spell.ID
-                        select new
-                        {
-                            skillLineAbility,
-                            skillLine
-                        }).ToList();
+                         join skillLine in Dbc.SkillLine
+                         on skillLineAbility.Value.SkillId equals skillLine.Key
+                         where skillLineAbility.Value.SpellId == _spell.ID
+                         select new
+                         {
+                             skillLineAbility,
+                             skillLine
+                         }).ToList();
 
             if (!query.Any())
                 return;
@@ -305,14 +305,14 @@ namespace SpellWork
             for (var effectIndex = 0; effectIndex < Dbc.MaxEffectIndex; effectIndex++)
             {
                 _rtb.SetBold();
-                if ((SpellEffect)_spell.Effect[effectIndex] == SpellEffect.NO_SPELL_EFFECT)
+                if (_spell.Effect[effectIndex] == SpellEffect.NO_SPELL_EFFECT)
                 {
                     _rtb.AppendFormatLine("Effect {0}:  NO EFFECT", effectIndex);
                     _rtb.AppendLine();
                     continue;
                 }
 
-                _rtb.AppendFormatLine("Effect {0}: Id {1} ({2})", effectIndex, _spell.Effect[effectIndex], (SpellEffect)_spell.Effect[effectIndex]);
+                _rtb.AppendFormatLine("Effect {0}: Id {1:D} ({2})", effectIndex, _spell.Effect[effectIndex], _spell.Effect[effectIndex]);
                 _rtb.SetDefaultStyle();
                 _rtb.AppendFormat("BasePoints = {0}", _spell.EffectBasePoints[effectIndex] + 1);
 
@@ -337,9 +337,9 @@ namespace SpellWork
                 _rtb.AppendFormatIfNotZero("  Multiple = {0:F}", _spell.EffectMultipleValue[effectIndex]);
                 _rtb.AppendLine();
 
-                _rtb.AppendFormatLine("Targets ({0}, {1}) ({2}, {3})",
+                _rtb.AppendFormatLine("Targets ({0:D}, {1:D}) ({2}, {3})",
                     _spell.EffectImplicitTargetA[effectIndex], _spell.EffectImplicitTargetB[effectIndex],
-                    (Target)_spell.EffectImplicitTargetA[effectIndex], (Target)_spell.EffectImplicitTargetB[effectIndex]);
+                    _spell.EffectImplicitTargetA[effectIndex], _spell.EffectImplicitTargetB[effectIndex]);
 
                 AuraModTypeName(effectIndex);
 
@@ -347,9 +347,15 @@ namespace SpellWork
 
                 switch (effectIndex)
                 {
-                    case 0: classMask = _spell.EffectSpellClassMaskA; break;
-                    case 1: classMask = _spell.EffectSpellClassMaskB; break;
-                    case 2: classMask = _spell.EffectSpellClassMaskC; break;
+                    case 0:
+                        classMask = _spell.EffectSpellClassMaskA;
+                        break;
+                    case 1:
+                        classMask = _spell.EffectSpellClassMaskB;
+                        break;
+                    case 2:
+                        classMask = _spell.EffectSpellClassMaskC;
+                        break;
                 }
 
                 if (classMask[0] != 0 || classMask[1] != 0 || classMask[2] != 0)
@@ -358,8 +364,8 @@ namespace SpellWork
 
                     var query = from spell in Dbc.Spell.Values
                                 where spell.SpellFamilyName == _spell.SpellFamilyName && spell.SpellFamilyFlags.HasAnyFlagOnSameIndex(classMask)
-                                join sk in Dbc.SkillLineAbility on spell.ID equals sk.Value.SpellId into temp
-                                from skill in temp.DefaultIfEmpty()
+                                join skillLine in Dbc.SkillLineAbility on spell.ID equals skillLine.Value.SpellId into skillLines
+                                from skill in skillLines.DefaultIfEmpty()
                                 select new
                                 {
                                     SpellID = spell.ID,
@@ -386,14 +392,14 @@ namespace SpellWork
                 _rtb.AppendFormatLineIfNotNullOrEmpty("{0}", _spell.GetRadius(effectIndex));
 
                 // append trigger spell
-                var trigger = _spell.EffectTriggerSpell[effectIndex];
-                if (trigger != 0)
+                var triggerSpellId = _spell.EffectTriggerSpell[effectIndex];
+                if (triggerSpellId != 0)
                 {
-                    if (Dbc.Spell.ContainsKey(trigger))
+                    if (Dbc.Spell.ContainsKey(triggerSpellId))
                     {
-                        var triggerSpell = Dbc.Spell[trigger];
+                        var triggerSpell = Dbc.Spell[triggerSpellId];
                         _rtb.SetStyle(Color.Blue, FontStyle.Bold);
-                        _rtb.AppendFormatLine("   Trigger spell ({0}) {1}. Chance = {2}", trigger, triggerSpell.SpellNameRank, _spell.ProcChance);
+                        _rtb.AppendFormatLine("   Trigger spell ({0}) {1}. Chance = {2}", triggerSpellId, triggerSpell.SpellNameRank, _spell.ProcChance);
                         _rtb.AppendFormatLineIfNotNullOrEmpty("   Description: {0}", triggerSpell.Description);
                         _rtb.AppendFormatLineIfNotNullOrEmpty("   ToolTip: {0}", triggerSpell.ToolTip);
                         _rtb.SetDefaultStyle();
@@ -407,14 +413,14 @@ namespace SpellWork
                     }
                     else
                     {
-                        _rtb.AppendFormatLine("Trigger spell ({0}) Not found, Chance = {1}", trigger, _spell.ProcChance);
+                        _rtb.AppendFormatLine("Trigger spell ({0}) Not found, Chance = {1}", triggerSpellId, _spell.ProcChance);
                     }
                 }
 
                 _rtb.AppendFormatLineIfNotZero("EffectChainTarget = {0}", _spell.EffectChainTarget[effectIndex]);
                 _rtb.AppendFormatLineIfNotZero("EffectItemType = {0}", _spell.EffectItemType[effectIndex]);
 
-                if ((Mechanic)_spell.EffectMechanic[effectIndex] != Mechanic.MECHANIC_NONE)
+                if (_spell.EffectMechanic[effectIndex] != Mechanic.MECHANIC_NONE)
                     _rtb.AppendFormatLine("Effect Mechanic = {0} ({1})", _spell.EffectMechanic[effectIndex], (Mechanic)_spell.EffectMechanic[effectIndex]);
 
                 _rtb.AppendLine();
@@ -458,12 +464,12 @@ namespace SpellWork
 
         private void AuraModTypeName(int index)
         {
-            var aura = (AuraType)_spell.EffectApplyAuraName[index];
+            var aura = _spell.EffectApplyAuraName[index];
             var misc = _spell.EffectMiscValue[index];
 
             if (_spell.EffectApplyAuraName[index] == 0)
             {
-                var effect = (SpellEffect)_spell.Effect[index];
+                var effect = _spell.Effect[index];
 
                 switch (effect)
                 {
@@ -708,11 +714,11 @@ namespace SpellWork
             foreach (var item in items)
             {
                 var name = string.IsNullOrEmpty(item.LocalesName) ? item.Name : item.LocalesName;
-                var desc = string.IsNullOrEmpty(item.LocalesDescription) ? item.Description : item.LocalesDescription;
+                var description = string.IsNullOrEmpty(item.LocalesDescription) ? item.Description : item.LocalesDescription;
 
-                desc = string.IsNullOrEmpty(desc) ? string.Empty : string.Format("({0})", desc);
+                description = string.IsNullOrEmpty(description) ? string.Empty : string.Format("({0})", description);
 
-                _rtb.AppendFormatLine(@"   {0} - {1} {2} ", item.Entry, name, desc);
+                _rtb.AppendFormatLine(@"   {0} - {1} {2} ", item.Entry, name, description);
             }
         }
     }

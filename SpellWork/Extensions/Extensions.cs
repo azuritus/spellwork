@@ -23,7 +23,7 @@ namespace SpellWork
         {
             byte num;
             var temp = new List<byte>();
-            
+
             while ((num = reader.ReadByte()) != 0)
             {
                 temp.Add(num);
@@ -199,9 +199,8 @@ namespace SpellWork
             dt.Columns.Add("NAME");
 
             dt.Rows.Add(new object[] { -1, noValue });
-
-            foreach (var str in Enum.GetValues(typeof(T)))
-                dt.Rows.Add((int)str, "(" + ((int)str).ToString("000") + ") " + str);
+            foreach (var en in Enum.GetValues(typeof(T)))
+                dt.Rows.Add(en, string.Format("({0:X}) {1}", en, en));
 
             cb.DataSource = dt;
             cb.DisplayMember = "NAME";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -19,8 +20,8 @@ namespace SpellWork
             familyTree.Nodes.Clear();
 
             var spells = from spell in Dbc.Spell
-                         where spell.Value.SpellFamilyName == (uint)spellfamily
-                         join sk in Dbc.SkillLineAbility on spell.Key equals sk.Value.SpellId into temp1
+                         where spell.Value.SpellFamilyName == spellfamily
+                         join skillLineAbility in Dbc.SkillLineAbility on spell.Key equals skillLineAbility.Value.SpellId into temp1
                          from skill in temp1.DefaultIfEmpty()
                          join skl in Dbc.SkillLine on skill.Value.SkillId equals skl.Key into temp2
                          from skillLine in temp2.DefaultIfEmpty()
@@ -31,16 +32,16 @@ namespace SpellWork
                              skillLine.Value
                          };
 
-            for (var i = 0; i < 96; i++)
+            for (var flag = 0; flag < 96; flag++)
             {
                 var mask = new uint[3];
 
-                if (i < 32)
-                    mask[0] = 1U << i;
-                else if (i < 64)
-                    mask[1] = 1U << (i - 32);
+                if (flag < 32)
+                    mask[0] = 1U << flag;
+                else if (flag < 64)
+                    mask[1] = 1U << (flag - 32);
                 else
-                    mask[2] = 1U << (i - 64);
+                    mask[2] = 1U << (flag - 64);
 
                 var node = new TreeNode
                                {
@@ -50,10 +51,10 @@ namespace SpellWork
                 familyTree.Nodes.Add(node);
             }
 
-            foreach (var elem in spells)
+            foreach (var spellEntry in spells)
             {
-                var spell = elem.spell.Value;
-                var isSkill = elem.SkillId != 0;
+                var spell = spellEntry.spell.Value;
+                var isSkill = spellEntry.SkillId != 0;
 
                 var name = new StringBuilder();
                 var toolTip = new StringBuilder();
@@ -66,14 +67,14 @@ namespace SpellWork
 
                 if (isSkill)
                 {
-                    name.AppendFormat("(Skill: ({0}) {1}) ", elem.SkillId, elem.Value.Name);
+                    name.AppendFormat("(Skill: ({0}) {1}) ", spellEntry.SkillId, spellEntry.Value.Name);
 
                     toolTip.AppendLine();
-                    toolTip.AppendFormatLine("Skill Name: {0}", elem.Value.Name);
-                    toolTip.AppendFormatLine("Description: {0}", elem.Value.Description);
+                    toolTip.AppendFormatLine("Skill Name: {0}", spellEntry.Value.Name);
+                    toolTip.AppendFormatLine("Description: {0}", spellEntry.Value.Description);
                 }
 
-                name.AppendFormat("({0})", spell.School.ToString().NormalizeString("MASK_"));
+                name.AppendFormat("({0})", spell.SchoolMask.ToString().NormalizeString("MASK_"));
 
                 foreach (TreeNode node in familyTree.Nodes)
                 {
@@ -86,14 +87,14 @@ namespace SpellWork
                     else
                         mask[2] = 1U << (node.Index - 64);
 
-                    if ((spell.SpellFamilyFlags.HasAnyFlagOnSameIndex(mask)))
-                    {
-                        var child = node.Nodes.Add(name.ToString());
-                        child.Name = spell.ID.ToString();
-                        child.ImageKey = isSkill ? "plus.ico" : "munus.ico";
-                        child.ForeColor = isSkill ? Color.Blue : Color.Red;
-                        child.ToolTipText = toolTip.ToString();
-                    }
+                    if ((!spell.SpellFamilyFlags.HasAnyFlagOnSameIndex(mask)))
+                        continue;
+
+                    var child = node.Nodes.Add(name.ToString());
+                    child.Name = spell.ID.ToString(CultureInfo.InvariantCulture);
+                    child.ImageKey = isSkill ? "plus.ico" : "munus.ico";
+                    child.ForeColor = isSkill ? Color.Blue : Color.Red;
+                    child.ToolTipText = toolTip.ToString();
                 }
             }
         }

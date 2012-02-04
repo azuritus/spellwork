@@ -26,59 +26,73 @@ namespace SpellWork
             textbox.AppendText(String.Format(format, args));
         }
 
+        /// <summary>
+        /// Appends new line to current text of a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
         public static void AppendLine(this TextBoxBase textbox)
         {
             textbox.AppendText(Environment.NewLine);
         }
 
+        /// <summary>
+        /// Appends the text and new line to current text of a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        /// <param name="text">The text to append to the current contents of the text box.</param>
         public static void AppendLine(this TextBoxBase textbox, string text)
         {
             textbox.AppendText(text + Environment.NewLine);
         }
 
+        /// <summary>
+        /// Appends textual representation of object to current text of a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        /// <param name="text">The object which textual representation has to be appendended to the current contents of the text box.</param>
         public static void Append(this TextBoxBase textbox, object text)
         {
             textbox.AppendText(text.ToString());
         }
 
-        public static void AppendFormatLineIfNotZero(this TextBoxBase builder, string format, uint arg)
+        public static void AppendFormatLineIfNotZero(this TextBoxBase textbox, string format, uint arg)
         {
             Contract.Requires(format != null);
 
             if (arg != 0)
-                builder.AppendFormatLine(format, arg);
+                textbox.AppendFormatLine(format, arg);
         }
 
-        public static void AppendFormatLineIfNotZero(this TextBoxBase builder, string format, float arg)
+        public static void AppendFormatLineIfNotZero(this TextBoxBase textbox, string format, float arg)
         {
             Contract.Requires(format != null);
 
             if (arg != 0.0f)
-                builder.AppendFormatLine(format, arg);
+                textbox.AppendFormatLine(format, arg);
         }
 
-        public static void AppendFormatLineIfNotNullOrEmpty(this TextBoxBase builder, string format, string arg)
+        public static void AppendFormatLineIfNotNullOrEmpty(this TextBoxBase textbox, string format, string arg)
         {
             Contract.Requires(format != null);
 
             if (!string.IsNullOrEmpty(arg))
-                builder.AppendFormatLine(format, arg);
+                textbox.AppendFormatLine(format, arg);
         }
 
-        public static void AppendFormatIfNotZero(this TextBoxBase builder, string format, uint arg)
+        public static void AppendFormatIfNotZero(this TextBoxBase textbox, string format, uint arg)
         {
             Contract.Requires(format != null);
 
             if (arg != 0)
-                builder.AppendFormat(format, arg);
+                textbox.AppendFormat(format, arg);
         }
 
-        public static void AppendFormatIfNotZero(this TextBoxBase builder, string format, float arg)
+        public static void AppendFormatIfNotZero(this TextBoxBase textbox, string format, float arg)
         {
             Contract.Requires(format != null);
 
             if (arg != 0.0f)
-                builder.AppendFormat(format, arg);
+                textbox.AppendFormat(format, arg);
         }
 
         public static void SetStyle(this RichTextBox textbox, Color color, FontStyle style)
@@ -98,17 +112,21 @@ namespace SpellWork
             textbox.SelectionColor = Color.Black;
         }
 
-        public static void ColorizeCode(this RichTextBox rtb)
+        /// <summary>
+        /// Highligths keywords in a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        public static void ColorizeCode(this RichTextBox textbox)
         {
             var keywords = new[] { "INSERT", "INTO", "DELETE", "FROM", "IN", "VALUES", "WHERE" };
-            var text = rtb.Text;
+            var text = textbox.Text;
 
-            rtb.SelectAll();
-            rtb.SelectionColor = rtb.ForeColor;
+            textbox.SelectAll();
+            textbox.SelectionColor = textbox.ForeColor;
 
             foreach (var keyword in keywords)
             {
-                var keywordPos = rtb.Find(keyword, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+                var keywordPos = textbox.Find(keyword, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
 
                 while (keywordPos != -1)
                 {
@@ -122,15 +140,15 @@ namespace SpellWork
                         quotePos = text.IndexOf("\"", quotePos + 1, keywordPos - (quotePos + 1), StringComparison.OrdinalIgnoreCase);
 
                     if (newLinePos >= commentPos && quoteCount % 2 == 0)
-                        rtb.SelectionColor = Color.Blue;
+                        textbox.SelectionColor = Color.Blue;
                     else if (newLinePos == commentPos)
-                        rtb.SelectionColor = Color.Green;
+                        textbox.SelectionColor = Color.Green;
 
-                    keywordPos = rtb.Find(keyword, keywordPos + rtb.SelectionLength, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+                    keywordPos = textbox.Find(keyword, keywordPos + textbox.SelectionLength, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                 }
             }
 
-            rtb.Select(0, 0);
+            textbox.Select(0, 0);
         }
     }
 }

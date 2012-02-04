@@ -33,26 +33,26 @@ namespace SpellWork
     {
         public uint ID;                                           // 0        m_ID
         public uint Category;                                     // 1        m_category
-        public uint Dispel;                                       // 2        m_dispelType
-        public uint Mechanic;                                     // 3        m_mechanic
-        public uint Attributes;                                   // 4        m_attribute
-        public uint AttributesEx;                                 // 5        m_attributesEx
-        public uint AttributesEx2;                                // 6        m_attributesExB
-        public uint AttributesEx3;                                // 7        m_attributesExC
-        public uint AttributesEx4;                                // 8        m_attributesExD
-        public uint AttributesEx5;                                // 9        m_attributesExE
-        public uint AttributesEx6;                                // 10       m_attributesExF
-        public uint AttributesEx7;                                // 11       3.2.0 (0x20 - totems, 0x4 - paladin auras, etc...)
-        public ulong Stances;                                     // 12-13    m_shapeshiftMask
-        public ulong StancesNot;                                  // 14-15    m_shapeshiftExclude
-        public uint Targets;                                      // 16       m_targets
-        public uint TargetCreatureType;                           // 17       m_targetCreatureType
+        public DispelType Dispel;                                 // 2        m_dispelType
+        public Mechanic Mechanic;                                 // 3        m_mechanic
+        public SpellAtribute0 Attributes;                          // 4        m_attribute
+        public SpellAtribute1 AttributesEx;                      // 5        m_attributesEx
+        public SpellAtribute2 AttributesEx2;                    // 6        m_attributesExB
+        public SpellAtribute3 AttributesEx3;                    // 7        m_attributesExC
+        public SpellAtribute4 AttributesEx4;                    // 8        m_attributesExD
+        public SpellAtribute5 AttributesEx5;                    // 9        m_attributesExE
+        public SpellAtribute6 AttributesEx6;                    // 10       m_attributesExF
+        public SpellAtribute7 AttributesEx7;                    // 11       3.2.0 (0x20 - totems, 0x4 - paladin auras, etc...)
+        public ShapeshiftFormMask Stances;                        // 12-13    m_shapeshiftMask
+        public ShapeshiftFormMask StancesNot;                     // 14-15    m_shapeshiftExclude
+        public SpellCastTargetFlag Targets;                       // 16       m_targets
+        public CreatureTypeMask TargetCreatureType;               // 17       m_targetCreatureType
         public uint RequiresSpellFocus;                           // 18       m_requiresSpellFocus
         public uint FacingCasterFlags;                            // 19       m_facingCasterFlags
-        public uint CasterAuraState;                              // 20       m_casterAuraState
-        public uint TargetAuraState;                              // 21       m_targetAuraState
-        public uint CasterAuraStateNot;                           // 22       m_excludeCasterAuraState
-        public uint TargetAuraStateNot;                           // 23       m_excludeTargetAuraState
+        public AuraState CasterAuraState;                         // 20       m_casterAuraState
+        public AuraState TargetAuraState;                         // 21       m_targetAuraState
+        public AuraState CasterAuraStateNot;                      // 22       m_excludeCasterAuraState
+        public AuraState TargetAuraStateNot;                      // 23       m_excludeTargetAuraState
         public uint CasterAuraSpell;                              // 24       m_casterAuraSpell
         public uint TargetAuraSpell;                              // 25       m_targetAuraSpell
         public uint ExcludeCasterAuraSpell;                       // 26       m_excludeCasterAuraSpell
@@ -70,7 +70,7 @@ namespace SpellWork
         public uint BaseLevel;                                    // 38       m_baseLevel
         public uint SpellLevel;                                   // 39       m_spellLevel
         public uint DurationIndex;                                // 40       m_durationIndex
-        public uint PowerType;                                    // 41       m_powerType
+        public Power PowerType;                                   // 41       m_powerType
         public uint ManaCost;                                     // 42       m_manaCost
         public uint ManaCostPerlevel;                             // 43       m_manaCostPerLevel
         public uint ManaPerSecond;                                // 44       m_manaPerSecond
@@ -85,11 +85,11 @@ namespace SpellWork
         public int[] Reagent;                                     // 52-59    m_reagent
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
         public uint[] ReagentCount;                               // 60-67    m_reagentCount
-        public int EquippedItemClass;                             // 68       m_equippedItemClass (value)
+        public ItemClass EquippedItemClass;                       // 68       m_equippedItemClass (value)
         public int EquippedItemSubClassMask;                      // 69       m_equippedItemSubclass (mask)
-        public int EquippedItemInventoryTypeMask;                 // 70       m_equippedItemInvTypes (mask)
+        public InventoryTypeMask EquippedItemInventoryTypeMask;   // 70       m_equippedItemInvTypes (mask)
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
-        public uint[] Effect;                     				  // 71-73    m_effect
+        public SpellEffect[] Effect;                     		  // 71-73    m_effect
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] EffectDieSides;                              // 74-76    m_effectDieSides
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
@@ -97,15 +97,15 @@ namespace SpellWork
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public int[] EffectBasePoints;                            // 80-82    m_effectBasePoints (don't must be used in spell/auras explicitly, must be used cached Spell::m_currentBasePoints)
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
-        public uint[] EffectMechanic;                             // 83-85    m_effectMechanic
+        public Mechanic[] EffectMechanic;                         // 83-85    m_effectMechanic
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
-        public uint[] EffectImplicitTargetA;                      // 86-88    m_implicitTargetA
+        public Target[] EffectImplicitTargetA;                    // 86-88    m_implicitTargetA
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
-        public uint[] EffectImplicitTargetB;                      // 89-91    m_implicitTargetB
+        public Target[] EffectImplicitTargetB;                    // 89-91    m_implicitTargetB
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectRadiusIndex;                          // 92-94    m_effectRadiusIndex - spellradius.dbc
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
-        public uint[] EffectApplyAuraName;                        // 95-97    m_effectAura
+        public AuraType[] EffectApplyAuraName;                    // 95-97    m_effectAura
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] EffectAmplitude;                            // 98-100   m_effectAuraPeriod
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
@@ -149,12 +149,12 @@ namespace SpellWork
         public uint StartRecoveryCategory;                        // 205      m_startRecoveryCategory
         public uint StartRecoveryTime;                            // 206      m_startRecoveryTime
         public uint MaxTargetLevel;                               // 207      m_maxTargetLevel
-        public uint SpellFamilyName;                              // 208      m_spellClassSet
+        public SpellFamilyName SpellFamilyName;                   // 208      m_spellClassSet
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public uint[] SpellFamilyFlags;                           // 209-211  m_spellClassMask NOTE: size is 12 bytes!!!
         public uint MaxAffectedTargets;                           // 212      m_maxTargets
-        public uint DmgClass;                                     // 213      m_defenseType
-        public uint PreventionType;                               // 214      m_preventionType
+        public SpellDmgClass DmgClass;                            // 213      m_defenseType
+        public SpellPreventionType PreventionType;                // 214      m_preventionType
         public uint StanceBarOrder;                               // 215      m_stanceBarOrder not used
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = Dbc.MaxEffectIndex)]
         public float[] DmgMultiplier;              				  // 216-218  m_effectChainAmplitude
@@ -163,8 +163,8 @@ namespace SpellWork
         public uint RequiredAuraVision;                           // 221      m_requiredAuraVision not used
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public uint[] TotemCategory;                              // 222-223  m_requiredTotemCategoryID
-        public int AreaGroupId;                                  // 224      m_requiredAreaGroupId
-        public uint SchoolMask;                                   // 225      m_schoolMask
+        public int AreaGroupId;                                   // 224      m_requiredAreaGroupId
+        public SpellSchoolMask SchoolMask;                        // 225      m_schoolMask
         public uint RuneCostID;                                   // 226      m_runeCostID
         public uint SpellMissileID;                               // 227      m_spellMissileID not used
         public uint PowerDisplayId;                               // 228      PowerDisplay.dbc, new in 3.1
@@ -313,14 +313,6 @@ namespace SpellWork
                     builder.AppendLine(" (Not Found in SpellDifficulty.dbc)");
 
                 return builder.ToString();
-            }
-        }
-
-        public SpellSchoolMask School
-        {
-            get
-            {
-                return (SpellSchoolMask)SchoolMask;
             }
         }
     };
