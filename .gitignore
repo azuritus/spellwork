@@ -1,8 +1,9 @@
-SpellWork/bin/*
-SpellWork/obj/*
 *.suo
 *.user
 *.orig
 *.rej
 *.patch
 *.log
+SpellWork/obj
+SpellWork/bin
+_ReSharper*

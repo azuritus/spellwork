@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace SpellWork
 {
@@ -10,37 +6,36 @@ namespace SpellWork
     {
         public Loader()
         {
-            DBC.Spell               = DBCReader.ReadDBC<SpellEntry>(DBC.SpellStrings);
-            DBC.SkillLine           = DBCReader.ReadDBC<SkillLineEntry>(DBC.SkillLineStrings);
-            DBC.SpellRange          = DBCReader.ReadDBC<SpellRangeEntry>(DBC.SpellRangeStrings);
-            DBC.ScreenEffect        = DBCReader.ReadDBC<ScreenEffectEntry>(DBC.ScreenEffectStrings);
+            Dbc.AreaGroup = DbcReader.ReadDbc<AreaGroupEntry>(null);
+            Dbc.AreaTable = DbcReader.ReadDbc<AreaTableEntry>(Dbc.AreaTableStrings);
+            Dbc.Spell = DbcReader.ReadDbc<SpellEntry>(Dbc.SpellStrings);
+            Dbc.SkillLine = DbcReader.ReadDbc<SkillLineEntry>(Dbc.SkillLineStrings);
+            Dbc.SpellRange = DbcReader.ReadDbc<SpellRangeEntry>(Dbc.SpellRangeStrings);
+            Dbc.ScreenEffect = DbcReader.ReadDbc<ScreenEffectEntry>(Dbc.ScreenEffectStrings);
 
-            DBC.SpellDuration       = DBCReader.ReadDBC<SpellDurationEntry>(null);
-            DBC.SkillLineAbility    = DBCReader.ReadDBC<SkillLineAbilityEntry>(null);
-            DBC.SpellRadius         = DBCReader.ReadDBC<SpellRadiusEntry>(null);
-            DBC.SpellCastTimes      = DBCReader.ReadDBC<SpellCastTimesEntry>(null);
-            DBC.SpellDifficulty     = DBCReader.ReadDBC<SpellDifficultyEntry>(null);
+            Dbc.SpellDuration = DbcReader.ReadDbc<SpellDurationEntry>(null);
+            Dbc.SkillLineAbility = DbcReader.ReadDbc<SkillLineAbilityEntry>(null);
+            Dbc.SpellRadius = DbcReader.ReadDbc<SpellRadiusEntry>(null);
+            Dbc.SpellCastTimes = DbcReader.ReadDbc<SpellCastTimesEntry>(null);
+            Dbc.SpellDifficulty = DbcReader.ReadDbc<SpellDifficultyEntry>(null);
 
-            DBC.OverrideSpellData   = DBCReader.ReadDBC<OverrideSpellDataEntry>(null);
+            Dbc.OverrideSpellData = DbcReader.ReadDbc<OverrideSpellDataEntry>(null);
+            Dbc.SpellRuneCost = DbcReader.ReadDbc<SpellRuneCostEntry>(null);
 
-            
-            DBC.Locale = DetectedLocale;
+            Dbc.Locale = DetectLocale();
         }
 
-        private LocalesDBC DetectedLocale
+        private static LocalesDBC DetectLocale()
         {
-            get
+            byte locale = 0;
+            while (string.IsNullOrEmpty(Dbc.Spell[Dbc.SpellEntryForLocaleDetection].GetName(locale)))
             {
-                byte locale = 0;
-                while (DBC.Spell[DBC.SPELL_ENTRY_FOR_DETECT_LOCALE].GetName(locale) == String.Empty)
-                {
-                    ++locale;
+                ++locale;
 
-                    if (locale >= DBC.MAX_DBC_LOCALE)
-                        throw new Exception("Detected unknown locale index " + locale);
-                }
-                return (LocalesDBC)locale;
+                if (locale >= Dbc.MaxDbcLocale)
+                    throw new Exception("Detected unknown locale index " + locale);
             }
+            return (LocalesDBC)locale;
         }
     }
 }

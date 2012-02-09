@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,126 +7,148 @@ namespace SpellWork
 {
     public static class RichTextBoxExtensions
     {
-        public const String DEFAULT_FAMILY = "Arial Unicode MS";
-        public const float  DEFAULT_SIZE   = 9f;
+        private const string DefaultFontFamily = "Arial Unicode MS";
+        private const float DefaultFontSize = 9f;
 
-        public static void AppendFormatLine(this RichTextBox textbox, string format, params object[] arg0)
+        public static void AppendFormatLine(this TextBoxBase textbox, string format, params object[] args)
         {
-            textbox.AppendText(String.Format(format, arg0) + Environment.NewLine);
+            Contract.Requires(format != null);
+            Contract.Requires(args != null);
+
+            textbox.AppendText(String.Format(format, args) + Environment.NewLine);
         }
 
-        public static void AppendFormat(this RichTextBox textbox, string format, params object[] arg0)
+        public static void AppendFormat(this TextBoxBase textbox, string format, params object[] args)
         {
-            textbox.AppendText(String.Format(format, arg0));
+            Contract.Requires(format != null);
+            Contract.Requires(args != null);
+
+            textbox.AppendText(String.Format(format, args));
         }
 
-        public static void AppendLine(this RichTextBox textbox)
+        /// <summary>
+        /// Appends new line to current text of a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        public static void AppendLine(this TextBoxBase textbox)
         {
             textbox.AppendText(Environment.NewLine);
         }
 
-        public static void AppendLine(this RichTextBox textbox, string text)
+        /// <summary>
+        /// Appends the text and new line to current text of a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        /// <param name="text">The text to append to the current contents of the text box.</param>
+        public static void AppendLine(this TextBoxBase textbox, string text)
         {
             textbox.AppendText(text + Environment.NewLine);
         }
 
-        public static void Append(this RichTextBox textbox, object text)
+        /// <summary>
+        /// Appends textual representation of object to current text of a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        /// <param name="text">The object which textual representation has to be appendended to the current contents of the text box.</param>
+        public static void Append(this TextBoxBase textbox, object text)
         {
             textbox.AppendText(text.ToString());
         }
 
-        public static void AppendFormatLineIfNotNull(this RichTextBox builder, string format, uint arg)
+        public static void AppendFormatLineIfNotZero(this TextBoxBase textbox, string format, uint arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0)
-            {
-                builder.AppendFormatLine(format, arg);
-            }
+                textbox.AppendFormatLine(format, arg);
         }
 
-        public static void AppendFormatLineIfNotNull(this RichTextBox builder, string format, float arg)
+        public static void AppendFormatLineIfNotZero(this TextBoxBase textbox, string format, float arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0.0f)
-            {
-                builder.AppendFormatLine(format, arg);
-            }
+                textbox.AppendFormatLine(format, arg);
         }
 
-        public static void AppendFormatLineIfNotNull(this RichTextBox builder, string format, string arg)
+        public static void AppendFormatLineIfNotNullOrEmpty(this TextBoxBase textbox, string format, string arg)
         {
-            if (arg != String.Empty)
-            {
-                builder.AppendFormatLine(format, arg);
-            }
+            Contract.Requires(format != null);
+
+            if (!string.IsNullOrEmpty(arg))
+                textbox.AppendFormatLine(format, arg);
         }
 
-        public static void AppendFormatIfNotNull(this RichTextBox builder, string format, uint arg)
+        public static void AppendFormatIfNotZero(this TextBoxBase textbox, string format, uint arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0)
-            {
-                builder.AppendFormat(format, arg);
-            }
+                textbox.AppendFormat(format, arg);
         }
 
-        public static void AppendFormatIfNotNull(this RichTextBox builder, string format, float arg)
+        public static void AppendFormatIfNotZero(this TextBoxBase textbox, string format, float arg)
         {
+            Contract.Requires(format != null);
+
             if (arg != 0.0f)
-            {
-                builder.AppendFormat(format, arg);
-            }
+                textbox.AppendFormat(format, arg);
         }
 
         public static void SetStyle(this RichTextBox textbox, Color color, FontStyle style)
         {
             textbox.SelectionColor = color;
-            textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, style);
+            textbox.SelectionFont = new Font(DefaultFontFamily, DefaultFontSize, style);
         }
-        
+
         public static void SetBold(this RichTextBox textbox)
         {
-            textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, FontStyle.Bold);
+            textbox.SelectionFont = new Font(DefaultFontFamily, DefaultFontSize, FontStyle.Bold);
         }
 
         public static void SetDefaultStyle(this RichTextBox textbox)
         {
-            textbox.SelectionFont = new Font(DEFAULT_FAMILY, DEFAULT_SIZE, FontStyle.Regular);
+            textbox.SelectionFont = new Font(DefaultFontFamily, DefaultFontSize, FontStyle.Regular);
             textbox.SelectionColor = Color.Black;
         }
 
-        public static void ColorizeCode(this RichTextBox rtb)
+        /// <summary>
+        /// Highligths keywords in a text box.
+        /// </summary>
+        /// <param name="textbox"></param>
+        public static void ColorizeCode(this RichTextBox textbox)
         {
-            string[] keywords = { "INSERT", "INTO", "DELETE", "FROM", "IN", "VALUES", "WHERE" };
-            string text = rtb.Text;
+            var keywords = new[] { "INSERT", "INTO", "DELETE", "FROM", "IN", "VALUES", "WHERE" };
+            var text = textbox.Text;
 
-            rtb.SelectAll();
-            rtb.SelectionColor = rtb.ForeColor;
+            textbox.SelectAll();
+            textbox.SelectionColor = textbox.ForeColor;
 
-            foreach (String keyword in keywords)
+            foreach (var keyword in keywords)
             {
-                int keywordPos = rtb.Find(keyword, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-                
+                var keywordPos = textbox.Find(keyword, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+
                 while (keywordPos != -1)
                 {
-                    int commentPos = text.LastIndexOf("-- ", keywordPos, StringComparison.OrdinalIgnoreCase);
-                    int newLinePos = text.LastIndexOf("\n", keywordPos, StringComparison.OrdinalIgnoreCase);
+                    var commentPos = text.LastIndexOf("-- ", keywordPos, StringComparison.OrdinalIgnoreCase);
+                    var newLinePos = text.LastIndexOf("\n", keywordPos, StringComparison.OrdinalIgnoreCase);
 
-                    int quoteCount = 0;
-                    int quotePos = text.IndexOf("\"", newLinePos + 1, keywordPos - newLinePos, StringComparison.OrdinalIgnoreCase);
+                    var quoteCount = 0;
+                    var quotePos = text.IndexOf("\"", newLinePos + 1, keywordPos - newLinePos, StringComparison.OrdinalIgnoreCase);
 
                     for (; quotePos != -1; quoteCount++)
-                    {
                         quotePos = text.IndexOf("\"", quotePos + 1, keywordPos - (quotePos + 1), StringComparison.OrdinalIgnoreCase);
-                    }
 
                     if (newLinePos >= commentPos && quoteCount % 2 == 0)
-                        rtb.SelectionColor = Color.Blue;
+                        textbox.SelectionColor = Color.Blue;
                     else if (newLinePos == commentPos)
-                        rtb.SelectionColor = Color.Green;
+                        textbox.SelectionColor = Color.Green;
 
-                    keywordPos = rtb.Find(keyword, keywordPos + rtb.SelectionLength, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+                    keywordPos = textbox.Find(keyword, keywordPos + textbox.SelectionLength, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                 }
             }
 
-            rtb.Select(0, 0);
+            textbox.Select(0, 0);
         }
     }
 }
