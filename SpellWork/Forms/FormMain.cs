@@ -191,20 +191,20 @@ namespace SpellWork
 
         private void AdvancedFilter()
         {
-            var bFamilyNames = _cbSpellFamilyName.SelectedIndex != 0;
-            var fFamilyNames = (SpellFamilyName)_cbSpellFamilyName.SelectedValue.ToUInt32();
+            var bFamilyName = _cbSpellFamilyName.SelectedIndex != 0;
+            var fFamilyName = bFamilyName ? (SpellFamilyName)Enum.Parse(typeof(SpellFamilyName), _cbSpellFamilyName.SelectedValue.ToString()) : SpellFamilyName.SPELLFAMILY_GENERIC;
 
             var bSpellAura = _cbSpellAura.SelectedIndex != 0;
-            var fSpellAura = (AuraType)_cbSpellAura.SelectedValue.ToUInt32();
+            var fSpellAura = bSpellAura ? (AuraType)Enum.Parse(typeof(AuraType), _cbSpellAura.SelectedValue.ToString()) : AuraType.SPELL_AURA_NONE;
 
             var bSpellEffect = _cbSpellEffect.SelectedIndex != 0;
-            var fSpellEffect = (SpellEffect)_cbSpellEffect.SelectedValue.ToUInt32();
+            var fSpellEffect = bSpellEffect ? (SpellEffect)Enum.Parse(typeof(SpellEffect), _cbSpellEffect.SelectedValue.ToString()) : SpellEffect.NO_SPELL_EFFECT;
 
             var bTarget1 = _cbTarget1.SelectedIndex != 0;
-            var fTarget1 = (Target)_cbTarget1.SelectedValue.ToInt32();
+            var fTarget1 = bTarget1 ? (Target)Enum.Parse(typeof(Target), _cbTarget1.SelectedValue.ToString()) : Target.NO_TARGET;
 
             var bTarget2 = _cbTarget2.SelectedIndex != 0;
-            var fTarget2 = (Target)_cbTarget2.SelectedValue.ToInt32();
+            var fTarget2 = bTarget2 ? (Target)Enum.Parse(typeof(Target), _cbTarget2.SelectedValue.ToString()) : Target.NO_TARGET;
 
             // additional filtert
             var advVal1 = _tbAdvancedFilter1Val.Text;
@@ -221,7 +221,7 @@ namespace SpellWork
 
             _spellList = (from spell in Dbc.Spell.Values
 
-                          where (!bFamilyNames || spell.SpellFamilyName == fFamilyNames)
+                          where (!bFamilyName || spell.SpellFamilyName == fFamilyName)
                               && (!bSpellEffect || spell.Effect.Contains(fSpellEffect))
                               && (!bSpellAura || spell.EffectApplyAuraName.Contains(fSpellAura))
                               && (!bTarget1 || spell.EffectImplicitTargetA.Contains(fTarget1))

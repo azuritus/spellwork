@@ -200,7 +200,7 @@ namespace SpellWork
 
             dt.Rows.Add(new object[] { -1, noValue });
             foreach (var en in Enum.GetValues(typeof(T)))
-                dt.Rows.Add(en, string.Format("({0:X}) {1}", en, en));
+                dt.Rows.Add(en, string.Format("({0:D}) {1}", en, en));
 
             cb.DataSource = dt;
             cb.DisplayMember = "NAME";
